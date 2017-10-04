@@ -8,6 +8,6 @@
     AppController.$inject = ['$scope'];
     function AppController($scope){
         $scope.message = 'Hello';
-        console.log('hello');
+        console.log('ryan hello');
     }
 })();
