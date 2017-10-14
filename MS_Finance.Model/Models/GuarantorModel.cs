@@ -4,23 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MS_Finance.Model.Repositories.OA
+namespace MS_Finance.Model.Models
 {
-    public class Guarantor
+    public class GuarantorModel
     {
-
-        public Guarantor()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
-        public string Id { get; set; }
+        public string Name { get; set; }
 
         public string NIC { get; set; }
 
-        public string Name { get; set; }
-
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         public string Address { get; set; }
 

@@ -14,5 +14,7 @@ namespace MS_Finance.Services
         {
             _contractsRepository = new ContractsRepository();
         }
+
+
     }
 }

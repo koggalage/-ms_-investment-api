@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\BrokerModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\GuarantorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\OA\Broker.cs" />
     <Compile Include="Repositories\OA\Contract.cs" />
