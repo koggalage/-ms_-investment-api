@@ -42,6 +42,7 @@
     <Compile Include="Models\BrokerModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\GuarantorModel.cs" />
+    <Compile Include="Models\GetCustomerDetailsVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\OA\Broker.cs" />
     <Compile Include="Repositories\OA\Contract.cs" />
@@ -53,6 +54,9 @@
   <ItemGroup>
     <Folder Include="Repositories\Interfaces\" />
     <Folder Include="Repositories\Tasks\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\GetCustomerDetailsModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
