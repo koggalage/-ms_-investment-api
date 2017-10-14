@@ -41,8 +41,12 @@
   <ItemGroup>
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\OA\Broker.cs" />
+    <Compile Include="Repositories\OA\Contract.cs" />
+    <Compile Include="Repositories\OA\ContractInstallment.cs" />
     <Compile Include="Repositories\OA\Customer.cs" />
     <Compile Include="Repositories\OA\Department.cs" />
+    <Compile Include="Repositories\OA\Guarantor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Repositories\Interfaces\" />
