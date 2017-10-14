@@ -1,4 +1,5 @@
-﻿using MS_Finance.Services;
+﻿using MS_Finance.Model.Models;
+using MS_Finance.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,10 @@ namespace MS_Finance.Controllers
             _contractsService = new ContractsService();
         }
 
-
+        [HttpGet]
+        public virtual HttpResponseMessage GetCustomerDetails()
+        {
+            return Request.CreateResponse<GetCustomerDetailsVM>(HttpStatusCode.OK, _contractsService.GetCustomerDetailsModel());
+        }
     }
 }
