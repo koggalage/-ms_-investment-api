@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\OA\Customer.cs" />
     <Compile Include="Repositories\OA\Department.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -30,5 +30,7 @@ namespace MS_Finance
         }
 
         public DbSet<Department> Departments { get; set; }
+
+        public DbSet<Customer> Customers { get; set; }
     }
 }
