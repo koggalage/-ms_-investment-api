@@ -38,5 +38,7 @@ namespace MS_Finance
         public DbSet<Broker> brokers { get; set; }
 
         public DbSet<Contract> Contracts { get; set; }
+
+        public DbSet<ContractInstallment> ContractInstallments { get; set; }
     }
 }

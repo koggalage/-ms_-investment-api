@@ -4,16 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MS_Finance.Model.Repositories.OA
+namespace MS_Finance.Model.Models
 {
-    public class ContractInstallment
+    public class ContractInstalmentModel
     {
-        public ContractInstallment()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
-        public string Id { get; set; }
 
         public decimal PaidAmount { get; set; }
 
@@ -27,6 +21,6 @@ namespace MS_Finance.Model.Repositories.OA
 
         public decimal Fine { get; set; }
 
-        public virtual Contract Contract { get; set; }
+        public int ContractId { get; set; }
     }
 }
