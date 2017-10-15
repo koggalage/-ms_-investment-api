@@ -53,5 +53,16 @@ namespace MS_Finance.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetActiveContracts());
         }
+
+        public virtual HttpResponseMessage GetCustomersForOpenContracts()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetCustomersForOpenContractsModel());
+        }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetVehicleNoByCustomerId(string customerId)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetVehicleNoByCustomerIdModel(customerId));
+        }
     }
 }

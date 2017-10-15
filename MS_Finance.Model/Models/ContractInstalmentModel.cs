@@ -21,6 +21,6 @@ namespace MS_Finance.Model.Models
 
         public decimal Fine { get; set; }
 
-        public int ContractId { get; set; }
+        public string ContractId { get; set; }
     }
 }
