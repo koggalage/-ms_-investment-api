@@ -11,15 +11,21 @@ namespace MS_Finance.Services
     public class ContractsService
     {
         private ContractsRepository _contractsRepository;
+        private BrokerRepository _brokerRepository;
+        private GuarantorRepository _guarantorRepository;
+        private CustomerRepository _customerRepository;
 
         public ContractsService()
         {
             _contractsRepository = new ContractsRepository();
+            _brokerRepository = new BrokerRepository();
+            _guarantorRepository = new GuarantorRepository();
+            _customerRepository = new CustomerRepository();
         }
 
         public GetCustomerDetailsVM GetCustomerDetailsModel()
         {
-            var customersList = _contractsRepository.GetCustomersr();
+            var customersList = _contractsRepository.GetCustomers();
 
             var Model = new GetCustomerDetailsVM();
 
@@ -40,5 +46,33 @@ namespace MS_Finance.Services
         {
             return _contractsRepository.GetContractsBySearchTerm(searchTerm);
         }
+
+        public bool CreateContract(ContractModel contractModel)
+        {
+
+            _contractsRepository.CreateContract(contractModel);
+
+            return true;
+        }
+
+        public GetBrokerDetailsVM GetBrokersModel()
+        {
+            var brokersList = _contractsRepository.GetBrokers();
+
+            var Model = new GetBrokerDetailsVM();
+
+            Model.BrokerDetails = new List<BrokerModel>();
+            foreach (var broker in brokersList)
+            {
+                Model.BrokerDetails.Add(new BrokerModel()
+                {
+                    Name = broker.Name,
+                    NIC = broker.NIC
+                });
+            }
+
+            return Model;
+        }
+
     }
 }

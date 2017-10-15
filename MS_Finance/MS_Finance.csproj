@@ -218,6 +218,18 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InstalmentController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Migrations\201710141454057_step2.cs" />
+    <Compile Include="Migrations\201710141454057_step2.Designer.cs">
+      <DependentUpon>201710141454057_step2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710141555068_step3.cs" />
+    <Compile Include="Migrations\201710141555068_step3.Designer.cs">
+      <DependentUpon>201710141555068_step3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201710141940415_step4.cs" />
+    <Compile Include="Migrations\201710141940415_step4.Designer.cs">
+      <DependentUpon>201710141940415_step4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="MSInvestmentDBContextSeeder.cs" />
@@ -351,6 +363,17 @@
       <Project>{a7fd83a3-90ac-4efa-8209-d95247160dce}</Project>
       <Name>MS_Finance.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201710141454057_step2.resx">
+      <DependentUpon>201710141454057_step2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710141555068_step3.resx">
+      <DependentUpon>201710141555068_step3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710141940415_step4.resx">
+      <DependentUpon>201710141940415_step4.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -20,5 +20,15 @@ namespace MS_Finance.Repositories
             _context.brokers.Add(broker);
             _context.SaveChanges();
         }
+
+        public Broker GetSingle(string id)
+        {
+            return _context.brokers.Where(x => x.Id == id).FirstOrDefault();
+        }
+
+        public Broker GetBrokerByNIC(string nic)
+        {
+            return _context.brokers.Where(x => x.NIC == nic).FirstOrDefault();
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace MS_Finance.Services
         {
             _brokerRepository = new BrokerRepository();
         }
-
+        
         public bool CreateBroker(BrokerModel brokerModel)
         {
             var broker = new Broker()
@@ -33,5 +33,13 @@ namespace MS_Finance.Services
 
             return true;
         }
+
+        public Broker IsBrokerExist(string brokerNIC)
+        {
+            var brokerByNIC = _brokerRepository.GetBrokerByNIC(brokerNIC);
+
+            return brokerByNIC;
+        }
+
     }
 }

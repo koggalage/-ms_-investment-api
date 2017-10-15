@@ -20,5 +20,10 @@ namespace MS_Finance.Repositories
             _context.Guarantors.Add(guarantor);
             _context.SaveChanges();
         }
+
+        public Guarantor GetSingle(string id)
+        {
+            return _context.Guarantors.Where(x => x.Id == id).FirstOrDefault();
+        }
     }
 }

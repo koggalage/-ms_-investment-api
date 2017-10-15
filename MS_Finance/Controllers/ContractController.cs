@@ -20,6 +20,7 @@ namespace MS_Finance.Controllers
             _contractsService = new ContractsService();
         }
 
+
         [HttpGet]
         public virtual HttpResponseMessage GetCustomerDetails()
         {
@@ -30,6 +31,23 @@ namespace MS_Finance.Controllers
         public virtual HttpResponseMessage GetContracts(string searchString) 
         {
             return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetContractsBySearchTerm(searchString));
+        }
+
+        [HttpPost]
+        public virtual HttpResponseMessage CreateContract(ContractModel contract)
+        {
+            _contractsService.CreateContract(contract);
+
+            return Request.CreateResponse(HttpStatusCode.OK, true);
+        }
+
+
+
+        [HttpGet]
+        [HttpPost]
+        public virtual HttpResponseMessage LoadBrokerDetails()
+        {
+            return Request.CreateResponse<GetBrokerDetailsVM>(HttpStatusCode.OK, _contractsService.GetBrokersModel());
         }
     }
 }

@@ -35,5 +35,12 @@ namespace MS_Finance.Services
             return true;
         }
 
+        public Customer IsCustomerExist(string customerNIC)
+        {
+            var customeByNIC = _customerRepository.GetCustomerByNIC(customerNIC);
+
+            return customeByNIC;
+        }
+
     }
 }

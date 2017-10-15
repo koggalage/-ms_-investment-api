@@ -19,12 +19,20 @@ namespace MS_Finance.Controllers
             _brokerService = new BrokerService();
         }
 
+        
+
         [HttpPost]
         public virtual HttpResponseMessage CreateBroker(BrokerModel broker)
         {
             _brokerService.CreateBroker(broker);
 
             return Request.CreateResponse(HttpStatusCode.OK, true);
+        }
+
+        [HttpPost]
+        public virtual HttpResponseMessage GetBrokerExistency(string brokerNIC)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _brokerService.IsBrokerExist(brokerNIC));
         }
     }
 }

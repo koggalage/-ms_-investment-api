@@ -41,7 +41,9 @@
   <ItemGroup>
     <Compile Include="Models\BrokerModel.cs" />
     <Compile Include="Models\ContractInstalmentModel.cs" />
+    <Compile Include="Models\ContractModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\GetBrokersDetailsVM.cs" />
     <Compile Include="Models\GuarantorModel.cs" />
     <Compile Include="Models\GetCustomerDetailsVM.cs" />
     <Compile Include="Models\SearchOptionsModel.cs" />

@@ -4,21 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MS_Finance.Model.Repositories.OA
+namespace MS_Finance.Model.Models
 {
-    public class Contract
+    public class ContractModel
     {
-
-        public Contract()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-
         public string Id { get; set; }
 
-        public virtual Customer Customer { get; set; }
-
         public string ContractNo { get; set; }
+
+        public string  CustomerId { get; set; }
 
         public decimal Amount { get; set; }
 
@@ -30,8 +24,8 @@ namespace MS_Finance.Model.Repositories.OA
 
         public string VehicleNo { get; set; }
 
-        public virtual Guarantor Guarantor { get; set; }
+        public string GuarantorId { get; set; }
 
-        public virtual Broker Broker { get; set; }
+        public string BrokerId { get; set; }
     }
 }

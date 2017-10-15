@@ -28,5 +28,11 @@ namespace MS_Finance.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, true);
         }
 
+        [HttpPost]
+        public virtual HttpResponseMessage GetCustomerExistency(string customerNIC)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _customerService.IsCustomerExist(customerNIC));
+        }
+
     }
 }

@@ -20,5 +20,15 @@ namespace MS_Finance.Repositories
             _context.Customers.Add(customer);
             _context.SaveChanges();
         }
+
+        public Customer GetCustomerByNIC(string nic)
+        {
+            return _context.Customers.Where(x => x.NIC == nic).FirstOrDefault();
+        }
+
+        public Customer GetSingle(string id)
+        {
+            return _context.Customers.Where(x => x.Id == id).FirstOrDefault();
+        }
     }
 }
