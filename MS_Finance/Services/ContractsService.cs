@@ -35,5 +35,10 @@ namespace MS_Finance.Services
 
             return Model;
         }
+
+        public List<SearchOptionsModel> GetContractsBySearchTerm(string searchTerm)
+        {
+            return _contractsRepository.GetContractsBySearchTerm(searchTerm);
+        }
     }
 }

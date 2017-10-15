@@ -34,5 +34,10 @@ namespace MS_Finance.Services
 
             return true;
         }
+
+        public List<ContractInstallment> GetInstalmentsForContract(string contractId)
+        {
+            return _instalmentRepository.GetInstalmentsForContract(contractId);
+        }
     }
 }

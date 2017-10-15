@@ -25,5 +25,11 @@ namespace MS_Finance.Controllers
         {
             return Request.CreateResponse<GetCustomerDetailsVM>(HttpStatusCode.OK, _contractsService.GetCustomerDetailsModel());
         }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetContracts(string searchString) 
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetContractsBySearchTerm(searchString));
+        }
     }
 }

@@ -20,5 +20,10 @@ namespace MS_Finance.Repositories
             _context.ContractInstallments.Add(instalment);
             _context.SaveChanges();
         }
+
+        public List<ContractInstallment> GetInstalmentsForContract(string contractId) 
+        {
+            return _context.ContractInstallments.Where(x => x.Id == contractId).ToList();
+        }
     }
 }
