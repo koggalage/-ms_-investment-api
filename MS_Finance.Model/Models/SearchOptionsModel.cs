@@ -8,6 +8,8 @@ namespace MS_Finance.Model.Models
 {
     public class SearchOptionsModel
     {
+        public string ContractId { get; set; }
+
         public string VehicleNumber { get; set; }
 
         public string NIC { get; set; }

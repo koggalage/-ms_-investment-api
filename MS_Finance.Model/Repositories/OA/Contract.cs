@@ -33,5 +33,7 @@ namespace MS_Finance.Model.Repositories.OA
         public virtual Guarantor Guarantor { get; set; }
 
         public virtual Broker Broker { get; set; }
+
+        public bool IsOpen { get; set; }
     }
 }

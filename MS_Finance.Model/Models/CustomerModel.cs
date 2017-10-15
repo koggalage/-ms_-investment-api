@@ -18,5 +18,7 @@ namespace MS_Finance.Model.Models
         public string Mobile { get; set; }
 
         public string Occupation { get; set; }
+
+        public DateTime CreatedOn { get; set; }
     }
 }

@@ -10,18 +10,18 @@ using System.Web.Http;
 
 namespace MS_Finance.Controllers
 {
-    [RoutePrefix("api/Customer")]
+    [RoutePrefix("api/Instalment")]
     public class InstalmentController : ApiController
     {
         private InstalmentService _instalmentService;
 
         public InstalmentController()
         {
-            _instalmentService = new InstalmentService();
+            _instalmentService = new InstalmentService(); ;
         }
 
         [HttpPost]
-        public virtual HttpResponseMessage CreateCustomer(ContractInstalmentModel instalment) 
+        public virtual HttpResponseMessage CreateInstalment(ContractInstalmentModel instalment) 
         {
             _instalmentService.CreateInstalment(instalment);
 

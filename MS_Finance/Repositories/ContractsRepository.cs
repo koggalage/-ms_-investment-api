@@ -24,9 +24,11 @@ namespace MS_Finance.Repositories
 
         public List<SearchOptionsModel> GetContractsBySearchTerm(string searchString) 
         {
+            searchString = !string.IsNullOrEmpty(searchString) ? searchString.ToLower() : string.Empty;
+
             var result = (from a in _context.Contracts
-                          where a.VehicleNo == searchString
-                          select new SearchOptionsModel { VehicleNumber = a.VehicleNo })
+                          where a.IsOpen && (a.VehicleNo.ToLower() == searchString || a.Customer.NIC.ToLower() == searchString)
+                          select new SearchOptionsModel { VehicleNumber = a.VehicleNo, Name = a.Customer.Name, NIC = a.Customer.NIC, ContractId = a.Id })
                           .ToList();
 
             return result;
@@ -46,30 +48,29 @@ namespace MS_Finance.Repositories
             var conract = new Contract()
             {
                 ContractNo = contractModel.ContractNo,
-                //Customer = _customerRepository.GetSingle(contractModel.CustomerId),
                 Amount = contractModel.Amount,
                 NoOfInstallments = contractModel.NoOfInstallments,
                 Insallment = contractModel.Insallment,
                 Type = contractModel.Type,
                 VehicleNo = contractModel.VehicleNo,
-                //Guarantor = _guarantorRepository.GetSingle(contractModel.GuarantorId),
-                //Broker = _brokerRepository.GetSingle(contractModel.BrokerId),
+                IsOpen = true
             };
 
             _context.Contracts.Add(conract);
 
-            _context.Customers.Attach(customer);
-            _context.brokers.Attach(broker);
+            if (customer != null)
+            {
+                _context.Customers.Attach(customer);
+            }
+            if (broker != null)
+            {
+                _context.brokers.Attach(broker);
+            }
 
             conract.Customer = customer;
             conract.Broker = broker;
 
             _context.SaveChanges();
-
-            //_context.Contracts.Attach(contract);
-            //_context.Entry(contract).State = EntityState.Modified;
-
-            //_context.SaveChanges();
         }
 
     }

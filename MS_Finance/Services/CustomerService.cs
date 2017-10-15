@@ -27,7 +27,7 @@ namespace MS_Finance.Services
                  MobileNumber = customerModel.Mobile,
                  NIC = customerModel.NIC,
                  Occupation = customerModel.Occupation,
-                 CreatedDate = DateTime.Now
+                 CreatedDate = customerModel.CreatedOn
             };
 
             _customerRepository.CreateCustomer(customer);
