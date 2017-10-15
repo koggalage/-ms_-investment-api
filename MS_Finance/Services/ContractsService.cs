@@ -74,5 +74,15 @@ namespace MS_Finance.Services
             return Model;
         }
 
+        public List<Customer> GetCustomersForOpenContractsModel()
+        {
+            return _contractsRepository.GetCustomersForOpenContracts();
+        }
+
+        public List<ContractModel> GetVehicleNoByCustomerIdModel(string customerId)
+        {
+            return _contractsRepository.GetVehicleNoByCustomerIdModel(customerId);
+        }
+
     }
 }

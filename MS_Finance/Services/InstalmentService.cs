@@ -19,18 +19,7 @@ namespace MS_Finance.Services
 
         public bool CreateInstalment(ContractInstalmentModel instalmentModel)
         {
-            var instalment = new ContractInstallment()
-            {
-                PaidAmount = instalmentModel.PaidAmount,
-                //Contract =  instalmentModel.Address,
-                DueDate = instalmentModel.DueDate,
-                PaidDate = instalmentModel.PaidDate,
-                LateDays = instalmentModel.LateDays,
-                Fine = instalmentModel.Fine,
-                UnsettleAmount = instalmentModel.UnsettleAmount
-            };
-
-            _instalmentRepository.CreateInstalment(instalment);
+            _instalmentRepository.CreateInstalment(instalmentModel);
 
             return true;
         }

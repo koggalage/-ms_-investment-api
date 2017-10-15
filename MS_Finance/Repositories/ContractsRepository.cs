@@ -73,5 +73,28 @@ namespace MS_Finance.Repositories
             _context.SaveChanges();
         }
 
+        public List<Customer> GetCustomersForOpenContracts()
+        {
+            var result = (from a in _context.Contracts
+                          where a.IsOpen == true
+                          select a.Customer)
+                          .GroupBy(a => a.Id)
+                          .Select(s => s.FirstOrDefault())
+                          .ToList();
+
+
+            return result;
+        }
+
+        public List<ContractModel> GetVehicleNoByCustomerIdModel(string customerId)
+        {
+            return _context.Contracts.Where(c => c.Customer.Id == customerId && c.IsOpen)
+                .Select(x => new ContractModel()
+                {
+                    Id = x.Id,
+                    VehicleNo = x.VehicleNo
+                }).ToList();
+        }
+
     }
 }

@@ -40,14 +40,24 @@ namespace MS_Finance.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, true);
         }
-
-
-
+        
         [HttpGet]
         [HttpPost]
         public virtual HttpResponseMessage LoadBrokerDetails()
         {
             return Request.CreateResponse<GetBrokerDetailsVM>(HttpStatusCode.OK, _contractsService.GetBrokersModel());
+        }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetCustomersForOpenContracts()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetCustomersForOpenContractsModel());
+        }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetVehicleNoByCustomerId(string customerId)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetVehicleNoByCustomerIdModel(customerId));
         }
     }
 }
