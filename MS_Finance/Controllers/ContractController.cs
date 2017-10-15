@@ -41,13 +41,17 @@ namespace MS_Finance.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, true);
         }
 
-
-
         [HttpGet]
         [HttpPost]
         public virtual HttpResponseMessage LoadBrokerDetails()
         {
             return Request.CreateResponse<GetBrokerDetailsVM>(HttpStatusCode.OK, _contractsService.GetBrokersModel());
+        }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetActiveContracts()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetActiveContracts());
         }
     }
 }

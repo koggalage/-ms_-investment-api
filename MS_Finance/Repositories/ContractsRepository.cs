@@ -73,5 +73,18 @@ namespace MS_Finance.Repositories
             _context.SaveChanges();
         }
 
+        public List<ContractModel> GetActiveContracts()
+        {
+
+            return _context.Contracts.Where(x => x.IsOpen).Select(x => new ContractModel()
+            {
+                Id = x.Id,
+                Amount = x.Amount,
+                VehicleNo = x.VehicleNo,
+                CustomerName = x.Customer != null ? x.Customer.Name : string.Empty,
+                ContractNo = x.Customer != null ? x.Customer.MobileNumber : string.Empty,
+            }).ToList();
+        }
+
     }
 }

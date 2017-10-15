@@ -27,5 +27,7 @@ namespace MS_Finance.Model.Models
         public string GuarantorId { get; set; }
 
         public string BrokerId { get; set; }
+
+        public string CustomerName { get; set; }
     }
 }

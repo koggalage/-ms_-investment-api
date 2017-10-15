@@ -74,5 +74,10 @@ namespace MS_Finance.Services
             return Model;
         }
 
+        public List<ContractModel> GetActiveContracts()
+        {
+            return _contractsRepository.GetActiveContracts();
+        }
+
     }
 }
