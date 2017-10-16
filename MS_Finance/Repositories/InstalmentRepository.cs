@@ -43,7 +43,7 @@ namespace MS_Finance.Repositories
 
         public List<ContractInstallment> GetInstalmentsForContract(string contractId) 
         {
-            return _context.ContractInstallments.Where(x => x.Id == contractId).ToList();
+            return _context.ContractInstallments.Where(x => x.Contract.Id == contractId).ToList();
         }
     }
 }
