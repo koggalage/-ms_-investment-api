@@ -11,7 +11,7 @@ using System.Web.Http;
 namespace MS_Finance.Controllers
 {
     [RoutePrefix("api/Instalment")]
-    public class InstalmentController : ApiController
+    public class InstalmentController : BaseApiController
     {
         private InstalmentService _instalmentService;
 

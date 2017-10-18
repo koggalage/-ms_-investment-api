@@ -1,5 +1,6 @@
 ﻿using MS_Finance.Model.Models;
 using MS_Finance.Services;
+using MS_Finance.Utilities.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace MS_Finance.Controllers
 {
 
     [RoutePrefix("api/Customer")]
-    public class CustomerController : ApiController
+    public class CustomerController : BaseApiController
     {
         private CustomerService _customerService;
 
@@ -20,9 +21,17 @@ namespace MS_Finance.Controllers
             _customerService = new CustomerService();
         }
 
+        //[ApiAuthorize(Roles="admin")]
         [HttpPost]
         public virtual HttpResponseMessage CreateCustomer(CustomerModel customer) 
         {
+            var userSessionModel = UserSessionModel; 
+
+			var userId = userSessionModel.UserId; //get userid
+
+			var roles = userSessionModel.Roles; //get roles
+
+
             _customerService.CreateCustomer(customer);
 
             return Request.CreateResponse(HttpStatusCode.OK, true);

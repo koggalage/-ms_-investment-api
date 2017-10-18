@@ -11,7 +11,7 @@ using System.Web.Http;
 namespace MS_Finance.Controllers
 {
     [RoutePrefix("api/Account")]
-    public class AccountController : ApiController
+    public class AccountController : BaseApiController
     {
         private AuthRepository _repo = null;
 

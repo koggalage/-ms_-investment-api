@@ -10,7 +10,7 @@ using System.Web.Http;
 namespace MS_Finance.Controllers
 {
     [RoutePrefix("api/Contract")]
-    public class ContractController : ApiController
+    public class ContractController : BaseApiController
     {
 
         private ContractsService _contractsService;

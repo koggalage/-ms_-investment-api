@@ -11,7 +11,7 @@ namespace MS_Finance.Controllers
 {
 
     [RoutePrefix("api/Contract")]
-    public class GuarantorController : ApiController
+    public class GuarantorController : BaseApiController
     {
 
         private GuarantorService _guarantorService;

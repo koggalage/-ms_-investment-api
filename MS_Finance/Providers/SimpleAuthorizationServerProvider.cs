@@ -24,9 +24,11 @@ namespace MS_Finance.Providers
 
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
 
+            IdentityUser user = null;
+
             using (AuthRepository _repo = new AuthRepository())
             {
-                IdentityUser user = await _repo.FindUser(context.UserName, context.Password);
+                user = await _repo.FindUser(context.UserName, context.Password);
 
                 if (user == null)
                 {
@@ -39,7 +41,7 @@ namespace MS_Finance.Providers
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim("sub", context.UserName));
-            identity.AddClaim(new Claim("role", "user"));
+            identity.AddClaim(new Claim("role", string.Join(",", user.Roles)));
 
             context.Validated(identity);
 

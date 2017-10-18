@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace MS_Finance.Controllers
 {
-    public class ValuesController : ApiController
+    public class ValuesController : BaseApiController
     {
         // GET api/values
         public IEnumerable<string> Get()
