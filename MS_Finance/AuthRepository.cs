@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MS_Finance.Model;
 using MS_Finance.Models;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,13 @@ namespace MS_Finance
 {
     public class AuthRepository : IDisposable
     {
-        private AuthContext _ctx;
+        private MSDataContext _ctx;
 
         private UserManager<IdentityUser> _userManager;
 
         public AuthRepository()
         {
-            _ctx = new AuthContext();
+            _ctx = new MSDataContext();
             _userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(_ctx));
         }
 

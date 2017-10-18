@@ -1,4 +1,5 @@
-﻿using MS_Finance.Model.Models;
+﻿using MS_Finance.Model;
+using MS_Finance.Model.Models;
 using MS_Finance.Model.Repositories.OA;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ namespace MS_Finance.Repositories
 {
     public class ContractsRepository
     {
-        AuthContext _context;
+        MSDataContext _context;
 
         public ContractsRepository()
         {
-            _context = new AuthContext();
+            _context = new MSDataContext();
         }
 
         public List<Customer> GetCustomers()

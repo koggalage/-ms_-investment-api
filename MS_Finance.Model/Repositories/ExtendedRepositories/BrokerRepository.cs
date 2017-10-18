@@ -1,4 +1,5 @@
-﻿using MS_Finance.Model.Repositories.OA;
+﻿using MS_Finance.Model;
+using MS_Finance.Model.Repositories.OA;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,11 @@ namespace MS_Finance.Repositories
 {
     public class BrokerRepository
     {
-         AuthContext _context;
+        MSDataContext _context;
 
          public BrokerRepository()
         {
-            _context = new AuthContext();
+            _context = new MSDataContext();
         }
 
         public void CreateBroker(Broker broker) 

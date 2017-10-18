@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MS_Finance.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,9 +9,9 @@ using System.Web;
 
 namespace MS_Finance
 {
-    public class MSInvestmentDBContextSeeder : DropCreateDatabaseIfModelChanges<AuthContext>
+    public class MSInvestmentDBContextSeeder : DropCreateDatabaseIfModelChanges<MSDataContext>
     {
-        protected override void Seed(AuthContext context)
+        protected override void Seed(MSDataContext context)
         {
 
             //if (!context.Roles.Any(r => r.Name == "admin"))

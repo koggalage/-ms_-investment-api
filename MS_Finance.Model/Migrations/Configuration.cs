@@ -1,4 +1,4 @@
-namespace MS_Finance.Migrations
+namespace MS_Finance.Model.Migrations
 {
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
@@ -7,30 +7,27 @@ namespace MS_Finance.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<MS_Finance.AuthContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<MS_Finance.Model.MSDataContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(MS_Finance.AuthContext context)
+        protected override void Seed(MS_Finance.Model.MSDataContext context)
         {
+            //  This method will be called after migrating to the latest version.
 
-            //var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new AuthContext()));
-
-            //var user = new ApplicationUser()
-            //{
-            //    UserName = "SuperPowerUser",
-            //    Email = "taiseer.joudeh@mymail.com",
-            //    EmailConfirmed = true,
-            //    //FirstName = "Taiseer",
-            //    //LastName = "Joudeh",
-            //    //Level = 1,
-            //    //JoinDate = DateTime.Now.AddYears(-3)
-            //};
-
-            //manager.Create(user, "123456");
+            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
+            //  to avoid creating duplicate seed data. E.g.
+            //
+            //    context.People.AddOrUpdate(
+            //      p => p.FullName,
+            //      new Person { FullName = "Andrew Peters" },
+            //      new Person { FullName = "Brice Lambson" },
+            //      new Person { FullName = "Rowan Miller" }
+            //    );
+            //
 
             if (!context.Roles.Any(r => r.Name == "admin"))
             {
@@ -52,6 +49,7 @@ namespace MS_Finance.Migrations
             }
 
             base.Seed(context);
+
         }
     }
 }

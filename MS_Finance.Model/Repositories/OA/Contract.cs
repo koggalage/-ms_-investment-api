@@ -35,5 +35,7 @@ namespace MS_Finance.Model.Repositories.OA
         public virtual Broker Broker { get; set; }
 
         public bool IsOpen { get; set; }
+
+        public DateTime LicenceExpireDate { get; set; }
     }
 }
