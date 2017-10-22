@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace MS_Finance.Model
 {
-    public class MSDataContext : IdentityDbContext<IdentityUser>
+    public class MSDataContext : DbContext
     {
         public MSDataContext()
-            : base("MSDataContext", throwIfV1Schema: false)
+            : base("MSDataContext")
         {
             Configuration.ProxyCreationEnabled = false;
             Configuration.LazyLoadingEnabled = false;
@@ -22,8 +22,6 @@ namespace MS_Finance.Model
         {
             return new MSDataContext();
         }
-
-        public DbSet<Department> Departments { get; set; }
 
         public DbSet<Customer> Customers { get; set; }
 

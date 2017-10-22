@@ -111,10 +111,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\201710161808327_InitialCreate.cs" />
-    <Compile Include="Migrations\201710161808327_InitialCreate.Designer.cs">
-      <DependentUpon>201710161808327_InitialCreate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BrokerModel.cs" />
     <Compile Include="Models\ContractInstalmentModel.cs" />
@@ -147,11 +143,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201710161808327_InitialCreate.resx">
-      <DependentUpon>201710161808327_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

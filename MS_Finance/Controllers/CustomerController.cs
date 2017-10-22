@@ -7,10 +7,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace MS_Finance.Controllers
 {
 
+    //[EnableCors(origins: "*", headers: "*", methods: "*")]
     [RoutePrefix("api/Customer")]
     public class CustomerController : BaseApiController
     {
@@ -22,14 +24,15 @@ namespace MS_Finance.Controllers
         }
 
         //[ApiAuthorize(Roles="admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public virtual HttpResponseMessage CreateCustomer(CustomerModel customer) 
         {
-            var userSessionModel = UserSessionModel; 
+           // var userSessionModel = UserSessionModel; 
 
-			var userId = userSessionModel.UserId; //get userid
+			//var userId = userSessionModel.UserId; //get userid
 
-			var roles = userSessionModel.Roles; //get roles
+			//var roles = userSessionModel.Roles; //get roles
 
 
             _customerService.CreateCustomer(customer);
