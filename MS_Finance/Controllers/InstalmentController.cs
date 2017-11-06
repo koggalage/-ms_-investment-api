@@ -1,4 +1,5 @@
-﻿using MS_Finance.Model.Models;
+﻿using MS_Finance.Business.Interfaces;
+using MS_Finance.Model.Models;
 using MS_Finance.Model.Repositories.OA;
 using MS_Finance.Services;
 using System;
@@ -13,11 +14,11 @@ namespace MS_Finance.Controllers
     [RoutePrefix("api/Instalment")]
     public class InstalmentController : BaseApiController
     {
-        private InstalmentService _instalmentService;
+        private IInstalmentService _instalmentService;
 
-        public InstalmentController()
+        public InstalmentController(InstalmentService instalmentService)
         {
-            _instalmentService = new InstalmentService(); ;
+            this._instalmentService = instalmentService;
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
-﻿using MS_Finance.Model.Models;
+﻿using MS_Finance.Business.Interfaces;
+using MS_Finance.Model.Models;
 using MS_Finance.Services;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,11 @@ namespace MS_Finance.Controllers
     public class GuarantorController : BaseApiController
     {
 
-        private GuarantorService _guarantorService;
+        private IGuarantorService _guarantorService;
 
-        public GuarantorController()
+        public GuarantorController(GuarantorService guarantorService)
         {
-            _guarantorService = new GuarantorService();
+            this._guarantorService = guarantorService;
         }
 
         [HttpPost]

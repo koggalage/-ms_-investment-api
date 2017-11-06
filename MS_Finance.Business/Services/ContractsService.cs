@@ -1,4 +1,6 @@
-﻿using MS_Finance.Model.Models;
+﻿using MS_Finance.Business.Interfaces;
+using MS_Finance.Model.Models;
+using MS_Finance.Model.Repositories.Interfaces;
 using MS_Finance.Model.Repositories.OA;
 using MS_Finance.Repositories;
 using System;
@@ -8,19 +10,23 @@ using System.Web;
 
 namespace MS_Finance.Services
 {
-    public class ContractsService
+    public class ContractsService : IContractsService
     {
-        private ContractsRepository _contractsRepository;
-        private BrokerRepository _brokerRepository;
-        private GuarantorRepository _guarantorRepository;
-        private CustomerRepository _customerRepository;
+        private IContractsRepository _contractsRepository;
+        private IBrokerRepository _brokerRepository;
+        private IGuarantorRepository _guarantorRepository;
+        private ICustomerRepository _customerRepository;
 
-        public ContractsService()
+        public ContractsService(
+            CustomerRepository customerRepository, 
+            ContractsRepository contractsRepository, 
+            BrokerRepository brokerRepository,
+            GuarantorRepository guarantorRepository)
         {
-            _contractsRepository = new ContractsRepository();
-            _brokerRepository = new BrokerRepository();
-            _guarantorRepository = new GuarantorRepository();
-            _customerRepository = new CustomerRepository();
+            this._contractsRepository = contractsRepository;
+            this._brokerRepository = brokerRepository;
+            this._guarantorRepository = guarantorRepository;
+            this._customerRepository = customerRepository;
         }
 
         public GetCustomerDetailsVM GetCustomerDetailsModel()

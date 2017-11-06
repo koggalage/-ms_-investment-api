@@ -1,4 +1,5 @@
 ﻿using MS_Finance.Business;
+using MS_Finance.Business.Interfaces;
 using MS_Finance.Model.Models;
 using MS_Finance.Services;
 using System;
@@ -13,11 +14,11 @@ namespace MS_Finance.Controllers
     [RoutePrefix("api/Broker")]
     public class BrokerController : BaseApiController
     {
-        private BrokerService _brokerService;
+        private IBrokerService _brokerService;
 
-        public BrokerController()
+        public BrokerController(BrokerService brokerService)
         {
-            _brokerService = new BrokerService();
+            this._brokerService = brokerService;
         }
 
         

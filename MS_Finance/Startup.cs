@@ -1,14 +1,21 @@
 ﻿using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
 using MS_Finance.Providers;
+using Ninject;
 using Owin;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using Ninject.Web.Common.OwinHost;
+using Ninject.Web.WebApi.OwinHost;
+using MS_Finance.Business.Interfaces;
+using MS_Finance.Services;
+using MS_Finance.Business;
 
 [assembly: OwinStartup(typeof(MS_Finance.Startup))]
 namespace MS_Finance
@@ -24,7 +31,23 @@ namespace MS_Finance
             
             ConfigureAuth(app);
 
-            app.UseWebApi(config);
+            app.UseNinjectMiddleware(CreateKernel).UseNinjectWebApi(config);
+
+            //app.UseWebApi(config);
+        }
+
+        private static StandardKernel CreateKernel()
+        {
+            var kernel = new StandardKernel();
+            kernel.Load(Assembly.GetExecutingAssembly());
+
+            kernel.Bind<ICustomerService>().To<CustomerService>();
+            kernel.Bind<IBrokerService>().To<BrokerService>();
+            kernel.Bind<IContractsService>().To<ContractsService>();
+            kernel.Bind<IGuarantorService>().To<GuarantorService>();
+            kernel.Bind<IInstalmentService>().To<InstalmentService>();
+
+            return kernel;
         }
     }
 }

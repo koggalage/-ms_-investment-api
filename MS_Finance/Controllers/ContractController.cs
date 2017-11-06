@@ -1,4 +1,5 @@
-﻿using MS_Finance.Model.Models;
+﻿using MS_Finance.Business.Interfaces;
+using MS_Finance.Model.Models;
 using MS_Finance.Services;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,11 @@ namespace MS_Finance.Controllers
     public class ContractController : BaseApiController
     {
 
-        private ContractsService _contractsService;
+        private IContractsService _contractsService;
 
-        public ContractController()
+        public ContractController(ContractsService contractsService)
         {
-            _contractsService = new ContractsService();
+            this._contractsService = contractsService;
         }
 
 

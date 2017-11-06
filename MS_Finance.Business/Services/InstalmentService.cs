@@ -1,4 +1,6 @@
-﻿using MS_Finance.Model.Models;
+﻿using MS_Finance.Business.Interfaces;
+using MS_Finance.Model.Models;
+using MS_Finance.Model.Repositories.Interfaces;
 using MS_Finance.Model.Repositories.OA;
 using MS_Finance.Repositories;
 using System;
@@ -8,13 +10,13 @@ using System.Web;
 
 namespace MS_Finance.Services
 {
-    public class InstalmentService
+    public class InstalmentService : IInstalmentService
     {
-        private InstalmentRepository _instalmentRepository;
+        private IInstalmentRepository _instalmentRepository;
 
-        public InstalmentService()
+        public InstalmentService(InstalmentRepository instalmentRepository)
         {
-            _instalmentRepository = new InstalmentRepository();
+            this._instalmentRepository = instalmentRepository;
         }
 
         public bool CreateInstalment(ContractInstalmentModel instalmentModel)

@@ -1,4 +1,6 @@
-﻿using MS_Finance.Model.Models;
+﻿using MS_Finance.Business.Interfaces;
+using MS_Finance.Model.Models;
+using MS_Finance.Model.Repositories.Interfaces;
 using MS_Finance.Model.Repositories.OA;
 using MS_Finance.Repositories;
 using System;
@@ -8,14 +10,14 @@ using System.Web;
 
 namespace MS_Finance.Services
 {
-    public class CustomerService
+    public class CustomerService : ICustomerService
     {
 
-        private CustomerRepository _customerRepository;
+        private ICustomerRepository _customerRepository;
 
-        public CustomerService()
+        public CustomerService(CustomerRepository customerRepository)
         {
-            _customerRepository = new CustomerRepository();
+            this._customerRepository = customerRepository;
         }
 
         public bool CreateCustomer(CustomerModel customerModel)

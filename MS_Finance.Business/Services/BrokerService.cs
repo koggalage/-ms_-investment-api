@@ -1,4 +1,6 @@
-﻿using MS_Finance.Model.Models;
+﻿using MS_Finance.Business.Interfaces;
+using MS_Finance.Model.Models;
+using MS_Finance.Model.Repositories.Interfaces;
 using MS_Finance.Model.Repositories.OA;
 using MS_Finance.Repositories;
 using System;
@@ -8,13 +10,13 @@ using System.Web;
 
 namespace MS_Finance.Business
 {
-    public class BrokerService
+    public class BrokerService : IBrokerService
     {
-        private BrokerRepository _brokerRepository;
+        protected IBrokerRepository _brokerRepository;
 
-        public BrokerService()
+        public BrokerService(BrokerRepository brokerRepository)
         {
-            _brokerRepository = new BrokerRepository();
+            this._brokerRepository = brokerRepository;
         }
         
         public bool CreateBroker(BrokerModel brokerModel)

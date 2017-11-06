@@ -1,5 +1,6 @@
 ﻿using MS_Finance.Model;
 using MS_Finance.Model.Models;
+using MS_Finance.Model.Repositories.Interfaces;
 using MS_Finance.Model.Repositories.OA;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Web;
 
 namespace MS_Finance.Repositories
 {
-    public class ContractsRepository
+    public class ContractsRepository : IContractsRepository
     {
         MSDataContext _context;
 

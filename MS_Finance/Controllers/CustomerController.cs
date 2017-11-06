@@ -1,4 +1,5 @@
-﻿using MS_Finance.Model.Models;
+﻿using MS_Finance.Business.Interfaces;
+using MS_Finance.Model.Models;
 using MS_Finance.Services;
 using MS_Finance.Utilities.Authorization;
 using System;
@@ -12,28 +13,20 @@ using System.Web.Http.Cors;
 namespace MS_Finance.Controllers
 {
 
-    //[EnableCors(origins: "*", headers: "*", methods: "*")]
     [RoutePrefix("api/Customer")]
     public class CustomerController : BaseApiController
     {
-        private CustomerService _customerService;
+        private ICustomerService _customerService;
 
-        public CustomerController()
+        public CustomerController(CustomerService customerService)
         {
-            _customerService = new CustomerService();
+            this._customerService = customerService;
         }
 
-        //[ApiAuthorize(Roles="admin")]
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public virtual HttpResponseMessage CreateCustomer(CustomerModel customer) 
         {
-           // var userSessionModel = UserSessionModel; 
-
-			//var userId = userSessionModel.UserId; //get userid
-
-			//var roles = userSessionModel.Roles; //get roles
-
 
             _customerService.CreateCustomer(customer);
 

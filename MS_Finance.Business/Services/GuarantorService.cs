@@ -1,4 +1,6 @@
-﻿using MS_Finance.Model.Models;
+﻿using MS_Finance.Business.Interfaces;
+using MS_Finance.Model.Models;
+using MS_Finance.Model.Repositories.Interfaces;
 using MS_Finance.Model.Repositories.OA;
 using MS_Finance.Repositories;
 using System;
@@ -8,13 +10,13 @@ using System.Web;
 
 namespace MS_Finance.Services
 {
-    public class GuarantorService
+    public class GuarantorService : IGuarantorService
     {
-        private GuarantorRepository _guarantorRepository;
+        private IGuarantorRepository _guarantorRepository;
 
-        public GuarantorService()
+        public GuarantorService(GuarantorRepository guarantorRepository)
         {
-            _guarantorRepository = new GuarantorRepository();
+            this._guarantorRepository = guarantorRepository;
         }
 
         public bool CreateGuarantor(GuarantorModel guarantorModel)
