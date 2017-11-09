@@ -26,5 +26,9 @@ namespace MS_Finance.Model.Repositories.OA
         public string ContactNo { get; set; }
 
         public string Occupation { get; set; }
+
+        public string CreatedByUserId { get; set; }
+
+        public string CreatedByUserName { get; set; }
     }
 }

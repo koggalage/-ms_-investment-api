@@ -53,23 +53,18 @@ namespace MS_Finance.Services
             base.Attach(customer);
         }
 
-        //private ICustomerRepository _customerRepository;
-
-        //public CustomerService(CustomerRepository customerRepository)
-        //{
-        //    this._customerRepository = customerRepository;
-        //}
-
         public bool CreateCustomer(CustomerModel customerModel)
         {
             var customer = new Customer()
             {
-                 Name = customerModel.Name,
-                 Address = customerModel.Address,
-                 MobileNumber = customerModel.Mobile,
-                 NIC = customerModel.NIC,
-                 Occupation = customerModel.Occupation,
-                 CreatedDate = customerModel.CreatedOn
+                 Name              = customerModel.Name,
+                 Address           = customerModel.Address,
+                 MobileNumber      = customerModel.Mobile,
+                 NIC               = customerModel.NIC,
+                 Occupation        = customerModel.Occupation,
+                 CreatedDate       = customerModel.CreatedOn,
+                 CreatedByUserId   = customerModel.CreatedByUserId,
+                 CreatedByUserName = customerModel.CreatedByUserName
             };
 
             base.Add(customer);

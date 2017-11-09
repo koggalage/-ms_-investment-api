@@ -28,5 +28,9 @@ namespace MS_Finance.Model.Repositories.OA
         public decimal Fine { get; set; }
 
         public virtual Contract Contract { get; set; }
+
+        public string CreatedByUserId { get; set; }
+
+        public string CreatedByUserName { get; set; }
     }
 }

@@ -57,7 +57,9 @@ namespace MS_Finance.Services
                 ContactNo = guarantorModel.ContactNo,
                 NIC = guarantorModel.NIC,
                 Occupation = guarantorModel.Occupation,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                CreatedByUserId = guarantorModel.CreatedByUserId,
+                CreatedByUserName = guarantorModel.CreatedByUserName
             };
 
             base.Add(guarantor);

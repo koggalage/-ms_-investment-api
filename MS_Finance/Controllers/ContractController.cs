@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
+using System.Web.Security;
 
 namespace MS_Finance.Controllers
 {
@@ -37,6 +39,9 @@ namespace MS_Finance.Controllers
         [HttpPost]
         public virtual HttpResponseMessage CreateContract(ContractModel contract)
         {
+            contract.CreatedByUserId = User.Identity.GetUserId();
+            contract.CreatedByUserName = User.Identity.Name;
+
             _contractsService.CreateContract(contract);
 
             return Request.CreateResponse(HttpStatusCode.OK, true);

@@ -37,5 +37,9 @@ namespace MS_Finance.Model.Repositories.OA
         public bool IsOpen { get; set; }
 
         public DateTime LicenceExpireDate { get; set; }
+
+        public string CreatedByUserId { get; set; }
+
+        public string CreatedByUserName { get; set; }
     }
 }

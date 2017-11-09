@@ -8,6 +8,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
+using System.Web.Security;
 
 namespace MS_Finance.Controllers
 {
@@ -22,10 +24,12 @@ namespace MS_Finance.Controllers
         }
 
         
-
         [HttpPost]
         public virtual HttpResponseMessage CreateBroker(BrokerModel broker)
         {
+            broker.CreatedByUserId = User.Identity.GetUserId();
+            broker.CreatedByUserName = User.Identity.Name;
+
             _brokerService.CreateBroker(broker);
 
             return Request.CreateResponse(HttpStatusCode.OK, true);

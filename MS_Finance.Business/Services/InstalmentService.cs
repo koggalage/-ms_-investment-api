@@ -64,7 +64,9 @@ namespace MS_Finance.Services
                 LateDays = instalmentModel.LateDays,
                 Fine = instalmentModel.Fine,
                 UnsettleAmount = instalmentModel.UnsettleAmount,
-                Contract = contract
+                Contract = contract,
+                CreatedByUserId = instalmentModel.CreatedByUserId,
+                CreatedByUserName = instalmentModel.CreatedByUserName
             };
 
             base.Add(instalment);

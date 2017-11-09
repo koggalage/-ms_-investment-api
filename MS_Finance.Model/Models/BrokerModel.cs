@@ -19,5 +19,9 @@ namespace MS_Finance.Model.Models
         public string ContactNo { get; set; }
 
         public string Occupation { get; set; }
+
+        public string CreatedByUserId { get; set; }
+
+        public string CreatedByUserName { get; set; }
     }
 }

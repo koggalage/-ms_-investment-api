@@ -29,5 +29,9 @@ namespace MS_Finance.Model.Models
         public string BrokerId { get; set; }
 
         public string CustomerName { get; set; }
+
+        public string CreatedByUserId { get; set; }
+
+        public string CreatedByUserName { get; set; }
     }
 }

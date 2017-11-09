@@ -143,7 +143,6 @@
     <Compile Include="Repositories\OA\Guarantor.cs" />
     <Compile Include="Repositories\OA\UnitOfWork.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Compile Include="Models\GetCustomerDetailsModel.cs" />
   </ItemGroup>

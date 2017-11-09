@@ -62,7 +62,9 @@ namespace MS_Finance.Business
                 ContactNo = brokerModel.ContactNo,
                 NIC = brokerModel.NIC,
                 Occupation = brokerModel.Occupation,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                CreatedByUserId = brokerModel.CreatedByUserId,
+                CreatedByUserName = brokerModel.CreatedByUserName
             };
 
             base.Add(broker);

@@ -8,6 +8,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
+using System.Web.Security;
 
 namespace MS_Finance.Controllers
 {
@@ -24,6 +26,9 @@ namespace MS_Finance.Controllers
         [HttpPost]
         public virtual HttpResponseMessage CreateInstalment(ContractInstalmentModel instalment) 
         {
+            instalment.CreatedByUserId = User.Identity.GetUserId();
+            instalment.CreatedByUserName = User.Identity.Name;
+
             _instalmentService.CreateInstalment(instalment);
 
             return Request.CreateResponse(HttpStatusCode.OK, true);

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
+using System.Web.Security;
 
 namespace MS_Finance.Controllers
 {
@@ -25,6 +27,9 @@ namespace MS_Finance.Controllers
         [HttpPost]
         public virtual HttpResponseMessage CreateGuarantor(GuarantorModel guarantor)
         {
+            guarantor.CreatedByUserId = User.Identity.GetUserId();
+            guarantor.CreatedByUserName = User.Identity.Name;
+
             _guarantorService.CreateGuarantor(guarantor);
 
             return Request.CreateResponse(HttpStatusCode.OK, true);

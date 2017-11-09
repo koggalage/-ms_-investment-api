@@ -101,7 +101,9 @@ namespace MS_Finance.Services
                 Insallment = contractModel.Insallment,
                 Type = contractModel.Type,
                 VehicleNo = contractModel.VehicleNo,
-                IsOpen = true
+                IsOpen = true,
+                CreatedByUserId = contractModel.CreatedByUserId,
+                CreatedByUserName = contractModel.CreatedByUserName
             };
 
 
