@@ -16,6 +16,8 @@ using Ninject.Web.WebApi.OwinHost;
 using MS_Finance.Business.Interfaces;
 using MS_Finance.Services;
 using MS_Finance.Business;
+using MS_Finance.Model.Repositories.Interfaces;
+using MS_Finance.Model.Repositories.OA;
 
 [assembly: OwinStartup(typeof(MS_Finance.Startup))]
 namespace MS_Finance
@@ -41,6 +43,7 @@ namespace MS_Finance
             var kernel = new StandardKernel();
             kernel.Load(Assembly.GetExecutingAssembly());
 
+            kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
             kernel.Bind<ICustomerService>().To<CustomerService>();
             kernel.Bind<IBrokerService>().To<BrokerService>();
             kernel.Bind<IContractsService>().To<ContractsService>();

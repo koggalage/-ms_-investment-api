@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using Microsoft.AspNet.Identity;
 
 namespace MS_Finance.Controllers
 {
@@ -27,7 +28,7 @@ namespace MS_Finance.Controllers
         [HttpPost]
         public virtual HttpResponseMessage CreateCustomer(CustomerModel customer) 
         {
-
+            var id = User.Identity.GetUserId();
             _customerService.CreateCustomer(customer);
 
             return Request.CreateResponse(HttpStatusCode.OK, true);

@@ -1,4 +1,5 @@
 ﻿using MS_Finance.Business.Interfaces;
+using MS_Finance.Business.Services;
 using MS_Finance.Model.Models;
 using MS_Finance.Model.Repositories.Interfaces;
 using MS_Finance.Model.Repositories.OA;
@@ -10,13 +11,41 @@ using System.Web;
 
 namespace MS_Finance.Services
 {
-    public class GuarantorService : IGuarantorService
+    public class GuarantorService : DefaultPersistentService<Guarantor>, IGuarantorService
     {
-        private IGuarantorRepository _guarantorRepository;
 
-        public GuarantorService(GuarantorRepository guarantorRepository)
+        public GuarantorService(IUnitOfWork UoW)
+            : base(UoW)
         {
-            this._guarantorRepository = guarantorRepository;
+
+        }
+
+
+        public IList<Guarantor> GetAll()
+        {
+            return base
+                .GetAll()
+                .ToList();
+        }
+
+        public Guarantor GetById(string id)
+        {
+            return base.GetSingle(x => x.Id == id);
+        }
+
+        public void Create(Guarantor guarantor)
+        {
+            base.Add(guarantor);
+        }
+
+        public void Update(Guarantor guarantor)
+        {
+            base.Update(guarantor);
+        }
+
+        public void Delete(Guid id)
+        {
+            throw new NotImplementedException();
         }
 
         public bool CreateGuarantor(GuarantorModel guarantorModel)
@@ -31,7 +60,7 @@ namespace MS_Finance.Services
                 CreatedDate = DateTime.Now
             };
 
-            _guarantorRepository.CreateGuarantor(guarantor);
+            base.Add(guarantor);
 
             return true;
         }

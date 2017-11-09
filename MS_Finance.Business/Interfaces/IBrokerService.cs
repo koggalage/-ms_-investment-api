@@ -10,6 +10,17 @@ namespace MS_Finance.Business.Interfaces
 {
     public interface IBrokerService
     {
+        IList<Broker> GetAll();
+
+        Broker GetById(string id);
+
+        void Create(Broker broker);
+
+        void Update(Broker broker);
+
+        void Attach(Broker broker);
+
+
         bool CreateBroker(BrokerModel brokerModel);
 
         Broker IsBrokerExist(string brokerNIC);

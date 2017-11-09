@@ -1,4 +1,5 @@
 ﻿using MS_Finance.Business.Interfaces;
+using MS_Finance.Business.Services;
 using MS_Finance.Model.Models;
 using MS_Finance.Model.Repositories.Interfaces;
 using MS_Finance.Model.Repositories.OA;
@@ -10,15 +11,54 @@ using System.Web;
 
 namespace MS_Finance.Services
 {
-    public class CustomerService : ICustomerService
+    public class CustomerService : DefaultPersistentService<Customer>,  ICustomerService
     {
 
-        private ICustomerRepository _customerRepository;
-
-        public CustomerService(CustomerRepository customerRepository)
+        public CustomerService(IUnitOfWork UoW) 
+        :base(UoW)
         {
-            this._customerRepository = customerRepository;
+            
         }
+
+
+        public IList<Customer> GetAll()
+        {
+            return base
+                .GetAll()
+                .ToList();
+        }
+
+        public Customer GetById(string id)
+        {
+            return base.GetSingle(x => x.Id == id);
+        }
+
+        public void Create(Customer customer)
+        {
+            base.Add(customer);
+        }
+
+        public void Update(Customer customer)
+        {
+            base.Update(customer);
+        }
+
+        public void Delete(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Attach(Customer customer)
+        {
+            base.Attach(customer);
+        }
+
+        //private ICustomerRepository _customerRepository;
+
+        //public CustomerService(CustomerRepository customerRepository)
+        //{
+        //    this._customerRepository = customerRepository;
+        //}
 
         public bool CreateCustomer(CustomerModel customerModel)
         {
@@ -32,16 +72,18 @@ namespace MS_Finance.Services
                  CreatedDate = customerModel.CreatedOn
             };
 
-            _customerRepository.CreateCustomer(customer);
+            base.Add(customer);
 
             return true;
         }
 
         public Customer IsCustomerExist(string customerNIC)
         {
-            var customeByNIC = _customerRepository.GetCustomerByNIC(customerNIC);
+            //var customeByNIC = _customerRepository.GetCustomerByNIC(customerNIC);
 
-            return customeByNIC;
+            return base
+                .GetAll()
+                .Where(x => x.NIC == customerNIC).FirstOrDefault();
         }
 
     }

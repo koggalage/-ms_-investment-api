@@ -10,6 +10,15 @@ namespace MS_Finance.Business.Interfaces
 {
     public interface IContractsService
     {
+        IList<Contract> GetAll();
+
+        Contract GetById(string id);
+
+        void Create(Contract contract);
+
+        void Update(Contract contract);
+
+
         GetCustomerDetailsVM GetCustomerDetailsModel();
 
         List<SearchOptionsModel> GetContractsBySearchTerm(string searchTerm);
