@@ -65,5 +65,11 @@ namespace MS_Finance.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetVehicleNoByCustomerIdModel(customerId));
         }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetMonthlyInstallment(decimal Amount, int NoOfInstallments)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetMonthlyInstallmentModel(Amount, NoOfInstallments));
+        }
     }
 }

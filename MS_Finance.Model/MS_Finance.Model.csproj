@@ -132,14 +132,17 @@
     <Compile Include="Repositories\Interfaces\ICustomerRepository.cs" />
     <Compile Include="Repositories\Interfaces\IGuarantorRepository.cs" />
     <Compile Include="Repositories\Interfaces\IInstalmentRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Repositories\OA\BaseRepository.cs" />
     <Compile Include="Repositories\OA\Broker.cs" />
     <Compile Include="Repositories\OA\Contract.cs" />
     <Compile Include="Repositories\OA\ContractInstallment.cs" />
     <Compile Include="Repositories\OA\Customer.cs" />
     <Compile Include="Repositories\OA\Department.cs" />
     <Compile Include="Repositories\OA\Guarantor.cs" />
+    <Compile Include="Repositories\OA\UnitOfWork.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Compile Include="Models\GetCustomerDetailsModel.cs" />
   </ItemGroup>

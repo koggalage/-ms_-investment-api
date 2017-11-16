@@ -95,5 +95,13 @@ namespace MS_Finance.Services
             return _contractsRepository.GetVehicleNoByCustomerIdModel(customerId);
         }
 
+        public decimal GetMonthlyInstallmentModel(decimal Amount, int NoOfInstallments)
+        {
+            double interestRate = (NoOfInstallments <= 6) ? 0.30 : (NoOfInstallments > 6) ? 0.36 : double.NaN;
+            decimal Insallment = ((Amount * Convert.ToDecimal(interestRate)) + Amount) / 12;
+            Insallment = Math.Round(Insallment, 2);
+            return Insallment;
+        }
+
     }
 }
