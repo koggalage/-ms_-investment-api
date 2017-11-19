@@ -29,6 +29,7 @@ namespace MS_Finance.Controllers
         {
             broker.CreatedByUserId = User.Identity.GetUserId();
             broker.CreatedByUserName = User.Identity.Name;
+            broker.CreatedOn = DateTime.Now;
 
             _brokerService.CreateBroker(broker);
 

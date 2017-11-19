@@ -66,5 +66,12 @@ namespace MS_Finance.Services
 
             return true;
         }
+
+        public Guarantor IsGuarantorExist(string guarantorNIC)
+        {
+            return base
+                .GetAll()
+                .Where(x => x.NIC == guarantorNIC).FirstOrDefault();
+        }
     }
 }

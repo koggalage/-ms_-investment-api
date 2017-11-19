@@ -29,10 +29,17 @@ namespace MS_Finance.Controllers
         {
             guarantor.CreatedByUserId = User.Identity.GetUserId();
             guarantor.CreatedByUserName = User.Identity.Name;
+            guarantor.CreatedOn = DateTime.Now;
 
             _guarantorService.CreateGuarantor(guarantor);
 
             return Request.CreateResponse(HttpStatusCode.OK, true);
+        }
+
+        [HttpPost]
+        public virtual HttpResponseMessage GetGuarantorExistency(string guarantorNIC)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _guarantorService.IsGuarantorExist(guarantorNIC));
         }
 
     }

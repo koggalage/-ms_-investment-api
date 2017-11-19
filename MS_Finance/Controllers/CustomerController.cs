@@ -31,6 +31,7 @@ namespace MS_Finance.Controllers
         {
             customer.CreatedByUserId   = User.Identity.GetUserId();
             customer.CreatedByUserName = User.Identity.Name;
+            customer.CreatedOn = DateTime.Now;
 
             _customerService.CreateCustomer(customer);
 
