@@ -37,6 +37,6 @@ namespace MS_Finance.Business.Interfaces
 
         decimal CalculateFineForCurrentInstalmentAndUpdateExcess(string contractId, DateTime dueDate, DateTime paidDate);
 
-        ContractInstalmentModel GetCurrentInstalmentDetails(string contractId);
+        ContractInstalmentModel GetCurrentInstalmentDetails(string contractId, DateTime paidDate);
     }
 }

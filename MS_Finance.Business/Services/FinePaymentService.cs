@@ -9,45 +9,37 @@ using System.Threading.Tasks;
 
 namespace MS_Finance.Business.Services
 {
-    public class ContractFineService : DefaultPersistentService<ContractFine>, IContractFineService
+    public class FinePaymentService : DefaultPersistentService<FinePayment>, IFinePaymentService
     {
-        public ContractFineService(IUnitOfWork UoW)
+        public FinePaymentService(IUnitOfWork UoW)
             :base(UoW)
         {
 
         }
 
-        public IQueryable<ContractFine> GetAll()
+        public IQueryable<FinePayment> GetAll()
         {
             return base.GetAll();
         }
 
-        public ContractFine GetById(string id)
+        public FinePayment GetById(string id)
         {
             return base.GetSingle(x => x.Id == id);
         }
 
-        public void Create(ContractFine fine)
+        public void Create(FinePayment payment)
         {
-            base.Add(fine);
+            base.Add(payment);
         }
 
-        public void Update(ContractFine fine)
+        public void Update(FinePayment payment)
         {
-            base.Update(fine);
+            base.Update(payment);
         }
 
         public void Delete(Guid id)
         {
             throw new NotImplementedException();
         }
-
-        public ContractFine GetContractFineForContract(string contractId)
-        {
-            return base.GetAll()
-                .Where(x => x.Contract.Id == contractId)
-                .FirstOrDefault();
-        }
-
     }
 }

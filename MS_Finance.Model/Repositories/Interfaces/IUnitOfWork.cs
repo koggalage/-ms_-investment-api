@@ -30,6 +30,8 @@ namespace MS_Finance.Model.Repositories.Interfaces
 
         IRepository<Excess> Excesses { get; }
 
+        IRepository<FinePayment> FinePayments { get; }
+
         #endregion
     }
 }

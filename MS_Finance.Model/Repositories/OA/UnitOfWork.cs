@@ -71,5 +71,11 @@ namespace MS_Finance.Model.Repositories.OA
         {
             get { return _Excesses ?? (_Excesses = new BaseRepository<Excess>(Context)); }
         }
+
+        private IRepository<FinePayment> _FinePayments;
+        public IRepository<FinePayment> FinePayments
+        {
+            get { return _FinePayments ?? (_FinePayments = new BaseRepository<FinePayment>(Context)); }
+        }
     }
 }

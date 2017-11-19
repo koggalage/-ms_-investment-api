@@ -20,16 +20,19 @@ namespace MS_Finance.Services
         protected IContractsService ContractsService;
         protected IContractFineService ContractFineService;
         protected IExcessService ExcessService;
+        protected IFinePaymentService FinePaymentService;
 
         public InstalmentService(IUnitOfWork UoW,
             IContractsService ContractsService,
             IContractFineService ContractFineService,
-            IExcessService ExcessService)
+            IExcessService ExcessService,
+            IFinePaymentService FinePaymentService)
             :base(UoW)
         {
             this.ContractsService = ContractsService;
             this.ContractFineService = ContractFineService;
             this.ExcessService = ExcessService;
+            this.FinePaymentService = FinePaymentService;
         }
 
         public IQueryable<ContractInstallment> GetAll()
@@ -66,16 +69,24 @@ namespace MS_Finance.Services
 
             var fineForCurrentInstalment = CalculateFineForCurrentInstalmentAndUpdateExcess(contract.Id, instalmentToBePaid.DueDate, instalmentModel.PaidDate);
             var fineForPreviousUnsettleInstalments = CalculateFineForPreviousUnsettleInstalments(contract, instalmentModel.PaidDate);
+
+            decimal actualCurrentInstalmentPayment  = instalmentModel.PaidAmount;
             
             decimal totalFineForCurrentAndPreviousUnsettleInstalments = fineForCurrentInstalment + fineForPreviousUnsettleInstalments;
-            decimal excessOrUnsettleAmount = GetExcessOrUnsettleAmountAtCurrentInstalment(contract.Id, instalmentModel.PaidAmount);
-
-            if (excessOrUnsettleAmount > 0)
-                AddOrUpdateExcess(contract.Id, excessOrUnsettleAmount);
-
 
             if (totalFineForCurrentAndPreviousUnsettleInstalments > 0)
                 AddOrUpdateFine(contract.Id, totalFineForCurrentAndPreviousUnsettleInstalments);
+
+            RecoverFineByExcess(instalmentModel.ContractId);
+            RecoverFineByCurrentInstalment(instalmentModel.ContractId, ref actualCurrentInstalmentPayment);
+
+            RecoverUnsettledInstalmentsByExcess(instalmentModel.ContractId);
+            RecoverUnsettledInstalmentsByCurrentInstalment(instalmentModel.ContractId, ref actualCurrentInstalmentPayment);
+
+            decimal excessOrUnsettleAmount = GetExcessOrUnsettleAmountAtCurrentInstalment(contract.Id, actualCurrentInstalmentPayment);
+
+            if (excessOrUnsettleAmount > 0)
+                AddOrUpdateExcess(contract.Id, excessOrUnsettleAmount);
 
             var unsettleAmount = excessOrUnsettleAmount < 0 ? -excessOrUnsettleAmount : 0.0m;
 
@@ -94,9 +105,78 @@ namespace MS_Finance.Services
         }
 
 
+        private void RecoverUnsettledInstalmentsByCurrentInstalment(string contractId, ref decimal currentInstalmentAmount)
+        {
+            var partialyPaidInstalments = UoW.ContractInstallments.GetAll()
+                                            .Where(x => x.Paid == (int)InstalmentPaymentStatus.PartialyPaid)
+                                            .ToList();
+
+            foreach (var item in partialyPaidInstalments)
+            {
+                var paidAmount = 0.0m;
+                var unsettleAmount = item.UnsettleAmount;
+                var difference = currentInstalmentAmount - unsettleAmount;
+
+                if (difference > 0)
+                {
+                    item.UnsettleAmount = 0;
+                    paidAmount = unsettleAmount;
+                }
+                else
+                {
+                    item.UnsettleAmount = unsettleAmount - currentInstalmentAmount;
+                    paidAmount = currentInstalmentAmount;
+                }
+
+                currentInstalmentAmount -= paidAmount;
+
+                if (item.UnsettleAmount == 0)
+                    item.Paid = (int)InstalmentPaymentStatus.Completed;
+            }
+
+            UoW.Commit();
+        }
+
+
+        private void RecoverUnsettledInstalmentsByExcess(string contractId)
+        {
+            var partialyPaidInstalments = UoW.ContractInstallments.GetAll()
+                                .Where(x => x.Paid == (int)InstalmentPaymentStatus.PartialyPaid)
+                                .ToList();
+
+            var contractExcess = UoW.Excesses.GetAll()
+                                    .Where(x => x.Contract.Id == contractId)
+                                    .FirstOrDefault();
+
+            if (contractExcess == null || contractExcess.Amount <= 0)
+                return;
+
+            var excess = contractExcess.Amount;
+
+            foreach (var item in partialyPaidInstalments)
+            {
+                var unsettleAmount = item.UnsettleAmount;
+                var difference = excess - unsettleAmount;
+
+                if (difference > 0)
+                {
+                    item.UnsettleAmount = 0;
+                }
+                else
+                {
+                    item.UnsettleAmount = unsettleAmount - excess;
+                }
+            }
+
+            UoW.Commit();
+        }
+
+
+
         private void RecoverFineByExcess(string contractId)
         {
-            var contract        = UoW.Contracts.GetSingle(x => x.Id == contractId);
+
+            var contract = UoW.Contracts.GetSingle(x => x.Id == contractId);
 
             var contractFine    = UoW.ContractFines.GetAll()
                                     .Where(x => x.Contract.Id == contractId)
@@ -106,8 +186,76 @@ namespace MS_Finance.Services
                                     .Where(x => x.Contract.Id == contractId)
                                     .FirstOrDefault();
 
+            var fine = contractFine != null ? contractFine.Fine : 0.0m;
+            var excess = contractExcess != null ? contractExcess.Amount : 0.0m;
+            var paidAmount = 0.0m;
+
+            if (contractFine == null || contractExcess == null)
+                return;
+
+            var difference = fine - excess;
+
+            if (difference > 0)
+            {
+                fine = difference;
+                paidAmount = excess;
+                excess = 0;
+            }
+            else
+            {
+                paidAmount = fine;
+                excess = excess - fine;
+                fine = 0;
+            }
+
+            UoW.FinePayments.Add(new FinePayment()
+            {
+                Contract = contract,
+                Amount = paidAmount
+            });
+
+            contractFine.Fine = fine;
+            contractExcess.Amount = excess;
+
+            UoW.Commit();
+        }
 
 
+        private void RecoverFineByCurrentInstalment(string contractId, ref decimal currentInstalmentAmount)
+        {
+            var contract = UoW.Contracts.GetSingle(x => x.Id == contractId);
+
+            var contractFine = UoW.ContractFines.GetAll()
+                        .Where(x => x.Contract.Id == contractId)
+                        .FirstOrDefault();
+
+            if (contractFine == null || contractFine.Fine <= 0)
+                return;
+
+            var fine = contractFine.Fine;
+            var difference = currentInstalmentAmount - fine;
+            var paidAmount = 0.0m;
+
+            if (difference > 0)
+            {
+                paidAmount = fine;
+                contractFine.Fine = 0;
+            }
+            else
+            {
+                paidAmount = currentInstalmentAmount;
+                contractFine.Fine = fine - currentInstalmentAmount;
+            }
+
+            currentInstalmentAmount -= paidAmount;
+
+            UoW.FinePayments.Add(new FinePayment()
+            {
+                Contract = contract,
+                Amount = paidAmount
+            });
+
+            UoW.Commit();
         }
 
         private decimal GetExcessOrUnsettleAmountAtCurrentInstalment(string contractId, decimal currentPaymentAmount)
@@ -117,10 +265,14 @@ namespace MS_Finance.Services
                                                         .Where(x => x.Paid != (int)InstalmentPaymentStatus.NotPaid)
                                                         .ToList();
 
+            var totalPaidFine = FinePaymentService.GetAll()
+                                .Where(x => x.Contract.Id == contractId)
+                                .Sum(x => x.Amount);
+
             var expectedTotal = (completedAndPartialyPaidInstalments != null ? completedAndPartialyPaidInstalments.Count + 1 : 1) * contract.Insallment;
             var paidTotal = completedAndPartialyPaidInstalments != null ? completedAndPartialyPaidInstalments.Sum(x => x.PaidAmount) : 0.0m;
 
-            return (paidTotal + currentPaymentAmount) - expectedTotal;
+            return ((paidTotal) + currentPaymentAmount) - expectedTotal;
         }
 
         public void AddOrUpdateFine(string contractId, decimal fine)
@@ -179,24 +331,6 @@ namespace MS_Finance.Services
 
             var fine = CalculateFine(contract.Insallment, dueDate, paidDate);
 
-            var difference = fine - excess;
-
-            if (difference > 0)
-            {
-                fine = difference;
-                excess = 0;
-            }
-            else
-            {
-                excess = excess - fine;
-                fine = 0;
-            }
-
-            if (excess >= 0)
-            {
-                AddOrUpdateExcess(contractId, excess);
-            }
-
             return fine;
 
         }
@@ -205,34 +339,16 @@ namespace MS_Finance.Services
         {
             var fine = 0.0m;
 
-            //var contractFine = ContractFineService.GetContractFineForContract(contract.Id);
-            var contractExcess = ExcessService.GetExcessForContract(contract.Id);
-            var excess = contractExcess != null ? contractExcess.Amount : 0.0m;
-
-            //fine = contractFine != null ? contractFine.Fine : 0.0m;
-
             var partialyPaidInstalments = GetPartialyPaidInstalments(contract.Id);
 
             foreach (var item in partialyPaidInstalments)
             {
-                var actualUnsettleAmount = (item.UnsettleAmount - excess <= 0) ? 0 : item.UnsettleAmount - excess;
-
+                var actualUnsettleAmount = item.UnsettleAmount;
                 fine += CalculateFine(actualUnsettleAmount, item.DueDate, paidDate);
-
-                excess = excess - item.UnsettleAmount <= 0 ? 0 : excess - item.UnsettleAmount;
-            }
-
-            if (contractExcess != null)
-            {
-                contractExcess.Amount = excess;
-                ExcessService.Update(contractExcess);
             }
 
             return fine;
         }
-
-
-
 
 
         private decimal CalculateFine(decimal amount, DateTime dueDate, DateTime paidDate)
@@ -265,24 +381,10 @@ namespace MS_Finance.Services
         public ContractInstallment GetInstalmentToBePaid(string contractId)
         {
 
-
-            //var a = this.GetAll() as ObjectQuery<ContractInstallment>;
-            //var nxt = a.Include("Contracts");
-
-            //var res = nxt.Where(x => x.Contract.Id == contractId && x.Paid == (int)InstalmentPaymentStatus.NotPaid)
-            //            .OrderBy(x => x.DueDate)
-            //            .FirstOrDefault();
-
-
-
             var nextInstalment = this.GetAll()
                                     .Where(x => x.Contract.Id == contractId && x.Paid == (int)InstalmentPaymentStatus.NotPaid)
                                     .OrderBy(x => x.DueDate)
                                     .FirstOrDefault();
-
-            //var cde = this.GetAll() as ObjectQuery<ContractInstallment>();
-            //cde.Include
-
 
             return nextInstalment;
         }
@@ -300,22 +402,36 @@ namespace MS_Finance.Services
             var result = new ContractModel()
             {
                 ContractCreatedOn = contract.CreatedOn,
-                //ContractDueDate = contract.
             };
 
             return result;
         }
 
-        public ContractInstalmentModel GetCurrentInstalmentDetails(string contractId)
+        public ContractInstalmentModel GetCurrentInstalmentDetails(string contractId, DateTime paidDate)
         {
             var currentInstalment = GetInstalmentToBePaid(contractId);
 
             var model = new ContractInstalmentModel()
             {
-                DueDate = currentInstalment.DueDate
+                DueDate = currentInstalment.DueDate,
+                TotalPayble = GetTotalPaybleAmount(contractId, paidDate)
             };
 
             return model;
+        }
+
+
+        public decimal GetTotalPaybleAmount(string contractId, DateTime paidDate)
+        {
+            var contract = UoW.Contracts.GetSingle(x => x.Id == contractId);
+            var partialyPaidInstalments = GetPartialyPaidInstalments(contractId);
+
+            var unsettleInstalmentAmount = partialyPaidInstalments!= null ? partialyPaidInstalments.Sum(x => x.UnsettleAmount) : 0.0m;
+            var fineForPartialyPaidInstalments = CalculateFineForPreviousUnsettleInstalments(contract, paidDate);
+            var previousFine = ContractFineService.GetAll().Sum(x => x.Fine);
+            var instalment = contract.Insallment;
+
+            return (unsettleInstalmentAmount + fineForPartialyPaidInstalments + previousFine + instalment);
         }
     }
 }

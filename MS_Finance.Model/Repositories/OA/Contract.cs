@@ -46,6 +46,8 @@ namespace MS_Finance.Model.Repositories.OA
 
         public virtual List<ContractInstallment>  ContractInstallments { get; set; }
 
+        public virtual List<FinePayment> FinePayments { get; set; }
+
         //public virtual ContractFine ContractFine  { get; set; }
 
         //public virtual Excess Excess { get; set; }

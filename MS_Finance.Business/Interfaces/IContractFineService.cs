@@ -9,7 +9,7 @@ namespace MS_Finance.Business.Interfaces
 {
     public interface IContractFineService
     {
-        IList<ContractFine> GetAll();
+        IQueryable<ContractFine> GetAll();
 
         ContractFine GetById(string id);
 

@@ -43,7 +43,7 @@ namespace MS_Finance.Controllers
         [HttpGet]
         public virtual HttpResponseMessage GetCurrentInstalmentDetails(string contractId)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetCurrentInstalmentDetails(contractId));
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetCurrentInstalmentDetails(contractId, DateTime.Now));
         }
     }
 }
