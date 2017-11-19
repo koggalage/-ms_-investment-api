@@ -11,7 +11,7 @@ namespace MS_Finance.Business.Interfaces
     public interface IInstalmentService
     {
 
-        //IList<ContractInstallment> GetAll();
+        IQueryable<ContractInstallment> GetAll();
 
         //ContractInstallment GetById(Guid id);
 
@@ -24,5 +24,19 @@ namespace MS_Finance.Business.Interfaces
         bool CreateInstalment(ContractInstalmentModel instalmentModel);
 
         List<ContractInstallment> GetInstalmentsForContract(string contractId);
+
+        ContractInstallment GetInstalmentToBePaid(string contractId);
+
+        List<ContractInstallment> GetPartialyPaidInstalments(string contractId);
+
+        decimal CalculateFineForPreviousUnsettleInstalments(Contract contract, DateTime paidDate);
+
+        void AddOrUpdateFine(string contractId, decimal fine);
+
+        void AddOrUpdateExcess(string contractId, decimal excess);
+
+        decimal CalculateFineForCurrentInstalmentAndUpdateExcess(string contractId, DateTime dueDate, DateTime paidDate);
+
+        ContractInstalmentModel GetCurrentInstalmentDetails(string contractId);
     }
 }

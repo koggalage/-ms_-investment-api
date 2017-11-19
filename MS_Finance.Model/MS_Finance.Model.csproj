@@ -87,6 +87,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -137,9 +138,11 @@
     <Compile Include="Repositories\OA\BaseRepository.cs" />
     <Compile Include="Repositories\OA\Broker.cs" />
     <Compile Include="Repositories\OA\Contract.cs" />
+    <Compile Include="Repositories\OA\ContractFine.cs" />
     <Compile Include="Repositories\OA\ContractInstallment.cs" />
     <Compile Include="Repositories\OA\Customer.cs" />
     <Compile Include="Repositories\OA\Department.cs" />
+    <Compile Include="Repositories\OA\Excess.cs" />
     <Compile Include="Repositories\OA\Guarantor.cs" />
     <Compile Include="Repositories\OA\UnitOfWork.cs" />
   </ItemGroup>

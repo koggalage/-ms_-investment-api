@@ -32,5 +32,9 @@ namespace MS_Finance.Model
         public DbSet<Contract> Contracts { get; set; }
 
         public DbSet<ContractInstallment> ContractInstallments { get; set; }
+
+        public DbSet<ContractFine> ContractFines { get; set; }
+
+        public DbSet<Excess> Excesses { get; set; }
     }
 }

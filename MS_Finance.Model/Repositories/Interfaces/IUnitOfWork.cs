@@ -26,6 +26,10 @@ namespace MS_Finance.Model.Repositories.Interfaces
 
         IRepository<ContractInstallment> ContractInstallments { get; }
 
+        IRepository<ContractFine> ContractFines { get; }
+
+        IRepository<Excess> Excesses { get; }
+
         #endregion
     }
 }

@@ -41,5 +41,13 @@ namespace MS_Finance.Model.Repositories.OA
         public string CreatedByUserId { get; set; }
 
         public string CreatedByUserName { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+
+        public virtual List<ContractInstallment>  ContractInstallments { get; set; }
+
+        //public virtual ContractFine ContractFine  { get; set; }
+
+        //public virtual Excess Excess { get; set; }
     }
 }

@@ -32,5 +32,7 @@ namespace MS_Finance.Business.Interfaces
         List<Customer> GetCustomersForOpenContractsModel();
 
         List<ContractModel> GetVehicleNoByCustomerIdModel(string customerId);
+
+        decimal GetMonthlyInstallmentModel(decimal Amount, int NoOfInstallments);
     }
 }

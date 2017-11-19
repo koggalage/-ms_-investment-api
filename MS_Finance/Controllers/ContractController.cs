@@ -42,9 +42,7 @@ namespace MS_Finance.Controllers
             contract.CreatedByUserId = User.Identity.GetUserId();
             contract.CreatedByUserName = User.Identity.Name;
 
-            _contractsService.CreateContract(contract);
-
-            return Request.CreateResponse(HttpStatusCode.OK, true);
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.CreateContract(contract));
         }
 
         [HttpGet]
@@ -69,6 +67,12 @@ namespace MS_Finance.Controllers
         public virtual HttpResponseMessage GetVehicleNoByCustomerId(string customerId)
         {
             return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetVehicleNoByCustomerIdModel(customerId));
+        }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetMonthlyInstallment(decimal Amount, int NoOfInstallments)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetMonthlyInstallmentModel(Amount, NoOfInstallments));
         }
     }
 }

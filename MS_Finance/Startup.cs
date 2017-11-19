@@ -18,6 +18,7 @@ using MS_Finance.Services;
 using MS_Finance.Business;
 using MS_Finance.Model.Repositories.Interfaces;
 using MS_Finance.Model.Repositories.OA;
+using MS_Finance.Business.Services;
 
 [assembly: OwinStartup(typeof(MS_Finance.Startup))]
 namespace MS_Finance
@@ -49,6 +50,8 @@ namespace MS_Finance
             kernel.Bind<IContractsService>().To<ContractsService>();
             kernel.Bind<IGuarantorService>().To<GuarantorService>();
             kernel.Bind<IInstalmentService>().To<InstalmentService>();
+            kernel.Bind<IContractFineService>().To<ContractFineService>();
+            kernel.Bind<IExcessService>().To<ExcessService>();
 
             return kernel;
         }

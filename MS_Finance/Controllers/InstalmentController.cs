@@ -39,5 +39,11 @@ namespace MS_Finance.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetInstalmentsForContract(contractId));
         }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetCurrentInstalmentDetails(string contractId)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetCurrentInstalmentDetails(contractId));
+        }
     }
 }
