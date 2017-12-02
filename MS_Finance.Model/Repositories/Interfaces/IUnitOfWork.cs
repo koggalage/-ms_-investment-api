@@ -32,6 +32,8 @@ namespace MS_Finance.Model.Repositories.Interfaces
 
         IRepository<FinePayment> FinePayments { get; }
 
+        IRepository<ContractSettlement> ContractSettlements { get; }
+
         #endregion
     }
 }

@@ -278,6 +278,7 @@
     <Compile Include="Controllers\GuarantorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InstalmentController.cs" />
+    <Compile Include="Controllers\RevenueReportController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -437,7 +438,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>64781</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:53438/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

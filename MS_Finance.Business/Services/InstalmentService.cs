@@ -21,18 +21,22 @@ namespace MS_Finance.Services
         protected IContractFineService ContractFineService;
         protected IExcessService ExcessService;
         protected IFinePaymentService FinePaymentService;
+        protected IContractSettlementService ContractSettlementService;
 
         public InstalmentService(IUnitOfWork UoW,
             IContractsService ContractsService,
             IContractFineService ContractFineService,
             IExcessService ExcessService,
-            IFinePaymentService FinePaymentService)
+            IFinePaymentService FinePaymentService,
+            IContractSettlementService ContractSettlementService)
             :base(UoW)
         {
             this.ContractsService = ContractsService;
             this.ContractFineService = ContractFineService;
             this.ExcessService = ExcessService;
             this.FinePaymentService = FinePaymentService;
+            this.ContractFineService = ContractFineService;
+            this.ContractSettlementService = ContractSettlementService;
         }
 
         public IQueryable<ContractInstallment> GetAll()
@@ -68,7 +72,7 @@ namespace MS_Finance.Services
             var contract = ContractsService.GetById(instalmentModel.ContractId);
 
             var fineForCurrentInstalment = CalculateFineForCurrentInstalmentAndUpdateExcess(contract.Id, instalmentToBePaid.DueDate, instalmentModel.PaidDate);
-            var fineForPreviousUnsettleInstalments = CalculateFineForPreviousUnsettleInstalments(contract, instalmentModel.PaidDate);
+            var fineForPreviousUnsettleInstalments = CalculateFineForPreviousUnsettleInstalments(contract.Id, instalmentModel.PaidDate);
 
             decimal actualCurrentInstalmentPayment  = instalmentModel.PaidAmount;
             
@@ -77,13 +81,13 @@ namespace MS_Finance.Services
             if (totalFineForCurrentAndPreviousUnsettleInstalments > 0)
                 AddOrUpdateFine(contract.Id, totalFineForCurrentAndPreviousUnsettleInstalments);
 
-            RecoverFineByExcess(instalmentModel.ContractId);
-            RecoverFineByCurrentInstalment(instalmentModel.ContractId, ref actualCurrentInstalmentPayment);
+            RecoverFineByExcess(instalmentModel.ContractId, instalmentModel.PaidDate);
+            RecoverFineByCurrentInstalment(instalmentModel.ContractId,instalmentModel.PaidDate, ref actualCurrentInstalmentPayment);
 
             RecoverUnsettledInstalmentsByExcess(instalmentModel.ContractId);
             RecoverUnsettledInstalmentsByCurrentInstalment(instalmentModel.ContractId, ref actualCurrentInstalmentPayment);
 
-            decimal excessOrUnsettleAmount = GetExcessOrUnsettleAmountAtCurrentInstalment(contract.Id, actualCurrentInstalmentPayment);
+            decimal excessOrUnsettleAmount = GetExcessOrUnsettleAmountAtCurrentInstalment(contract.Id, instalmentModel.PaidAmount);
 
             if (excessOrUnsettleAmount > 0)
                 AddOrUpdateExcess(contract.Id, excessOrUnsettleAmount);
@@ -97,7 +101,7 @@ namespace MS_Finance.Services
             instalmentToBePaid.CreatedByUserId      = instalmentModel.CreatedByUserId;
             instalmentToBePaid.CreatedByUserName    = instalmentModel.CreatedByUserName;
             instalmentToBePaid.Paid                 = unsettleAmount > 0 ? (int)InstalmentPaymentStatus.PartialyPaid : (int)InstalmentPaymentStatus.Completed;
-
+            instalmentToBePaid.Approved             = false;
 
             base.Update(instalmentToBePaid);
 
@@ -108,7 +112,7 @@ namespace MS_Finance.Services
         private void RecoverUnsettledInstalmentsByCurrentInstalment(string contractId, ref decimal currentInstalmentAmount)
         {
             var partialyPaidInstalments = UoW.ContractInstallments.GetAll()
-                                            .Where(x => x.Paid == (int)InstalmentPaymentStatus.PartialyPaid)
+                                            .Where(x => x.Paid == (int)InstalmentPaymentStatus.PartialyPaid && x.Contract.Id == contractId)
                                             .ToList();
 
             foreach (var item in partialyPaidInstalments)
@@ -141,7 +145,7 @@ namespace MS_Finance.Services
         private void RecoverUnsettledInstalmentsByExcess(string contractId)
         {
             var partialyPaidInstalments = UoW.ContractInstallments.GetAll()
-                                .Where(x => x.Paid == (int)InstalmentPaymentStatus.PartialyPaid)
+                                .Where(x => x.Paid == (int)InstalmentPaymentStatus.PartialyPaid && x.Contract.Id == contractId)
                                 .ToList();
 
             var contractExcess = UoW.Excesses.GetAll()
@@ -152,19 +156,26 @@ namespace MS_Finance.Services
                 return;
 
             var excess = contractExcess.Amount;
+            if (excess <= 0)
+                return;
 
             foreach (var item in partialyPaidInstalments)
             {
+                if (excess <= 0)
+                    break;
+
                 var unsettleAmount = item.UnsettleAmount;
                 var difference = excess - unsettleAmount;
 
                 if (difference > 0)
                 {
                     item.UnsettleAmount = 0;
+                    excess -= unsettleAmount;
                 }
                 else
                 {
                     item.UnsettleAmount = unsettleAmount - excess;
+                    excess = 0;
                 }
             }
 
@@ -173,7 +184,7 @@ namespace MS_Finance.Services
 
 
 
-        private void RecoverFineByExcess(string contractId)
+        private void RecoverFineByExcess(string contractId, DateTime paidDate)
         {
 
             var contract = UoW.Contracts.GetSingle(x => x.Id == contractId);
@@ -190,7 +201,7 @@ namespace MS_Finance.Services
             var excess = contractExcess != null ? contractExcess.Amount : 0.0m;
             var paidAmount = 0.0m;
 
-            if (contractFine == null || contractExcess == null)
+            if (contractFine == null || contractExcess == null || excess <= 0)
                 return;
 
             var difference = fine - excess;
@@ -211,7 +222,8 @@ namespace MS_Finance.Services
             UoW.FinePayments.Add(new FinePayment()
             {
                 Contract = contract,
-                Amount = paidAmount
+                Amount = paidAmount,
+                CreatedOn = paidDate
             });
 
             contractFine.Fine = fine;
@@ -221,7 +233,7 @@ namespace MS_Finance.Services
         }
 
 
-        private void RecoverFineByCurrentInstalment(string contractId, ref decimal currentInstalmentAmount)
+        private void RecoverFineByCurrentInstalment(string contractId,DateTime paidDate, ref decimal currentInstalmentAmount)
         {
             var contract = UoW.Contracts.GetSingle(x => x.Id == contractId);
 
@@ -252,7 +264,8 @@ namespace MS_Finance.Services
             UoW.FinePayments.Add(new FinePayment()
             {
                 Contract = contract,
-                Amount = paidAmount
+                Amount = paidAmount,
+                CreatedOn = paidDate
             });
 
             UoW.Commit();
@@ -262,17 +275,19 @@ namespace MS_Finance.Services
         {
             var contract = ContractsService.GetById(contractId);
             var completedAndPartialyPaidInstalments = this.GetAll()
-                                                        .Where(x => x.Paid != (int)InstalmentPaymentStatus.NotPaid)
+                                                        .Where(x => x.Paid != (int)InstalmentPaymentStatus.NotPaid && x.Contract.Id == contractId)
                                                         .ToList();
 
-            var totalPaidFine = FinePaymentService.GetAll()
-                                .Where(x => x.Contract.Id == contractId)
-                                .Sum(x => x.Amount);
+            var finePayment = FinePaymentService.GetAll()
+                                .Where(x => x.Contract.Id == contractId);
 
-            var expectedTotal = (completedAndPartialyPaidInstalments != null ? completedAndPartialyPaidInstalments.Count + 1 : 1) * contract.Insallment;
+
+            var totalPaidFine = finePayment.FirstOrDefault() != null ? finePayment.Sum(x => x.Amount) : 0.0m;
+
+            var expectedTotal = ((completedAndPartialyPaidInstalments != null ? completedAndPartialyPaidInstalments.Count + 1 : 1) * contract.Insallment);
             var paidTotal = completedAndPartialyPaidInstalments != null ? completedAndPartialyPaidInstalments.Sum(x => x.PaidAmount) : 0.0m;
 
-            return ((paidTotal) + currentPaymentAmount) - expectedTotal;
+            return ((paidTotal + currentPaymentAmount) - expectedTotal) - totalPaidFine;
         }
 
         public void AddOrUpdateFine(string contractId, decimal fine)
@@ -335,11 +350,11 @@ namespace MS_Finance.Services
 
         }
 
-        public decimal CalculateFineForPreviousUnsettleInstalments(Contract contract, DateTime paidDate)
+        public decimal CalculateFineForPreviousUnsettleInstalments(string contractId, DateTime paidDate)
         {
             var fine = 0.0m;
 
-            var partialyPaidInstalments = GetPartialyPaidInstalments(contract.Id);
+            var partialyPaidInstalments = GetPartialyPaidInstalments(contractId);
 
             foreach (var item in partialyPaidInstalments)
             {
@@ -371,7 +386,7 @@ namespace MS_Finance.Services
         public List<ContractInstallment> GetPartialyPaidInstalments(string contractId)
         {
             var partialyPaidInstalments = this.GetAll()
-                                            .Where(x => x.Paid == (int)InstalmentPaymentStatus.PartialyPaid)
+                                            .Where(x => x.Paid == (int)InstalmentPaymentStatus.PartialyPaid && x.Contract.Id == contractId)
                                             .ToList();
 
             return partialyPaidInstalments;
@@ -395,6 +410,44 @@ namespace MS_Finance.Services
             return this.GetAll().Where(x => x.Contract.Id == contractId).ToList();
         }
 
+        public ContractDetailModel GetContractDetails(string contractId)
+        {
+            var contract = ContractsService.GetAllWithIncludes(x => x.Customer, c => c.Broker, c => c.Guarantor)
+                            .Where(t => t.Id == contractId)
+                            .FirstOrDefault();
+
+            var fine = FinePaymentService.GetAll().Where(x => x.Contract.Id == contractId).Select(x => x.Amount).Sum();
+
+            var instalments = GetInstalmentsForContract(contractId);
+
+            var model = new ContractDetailModel()
+            {
+                CustomerName = contract.Customer.Name,
+                CustomerNIC = contract.Customer.NIC,
+                CustomerAddress = contract.Customer.Address,
+                CustomerContactNo = contract.Customer.MobileNumber,
+                CustomerOccupation = contract.Customer.Occupation,
+
+                BrokerName = contract.Broker != null? contract.Broker.Name : string.Empty,
+                BrokerAddress = contract.Broker != null? contract.Broker.Address : string.Empty,
+                BrokerContactNo = contract.Broker != null? contract.Broker.ContactNo : string.Empty,
+                BrokerNIC = contract.Broker != null? contract.Broker.NIC : string.Empty,
+                BrokerOccupation = contract.Broker != null ? contract.Broker.Occupation : string.Empty,
+
+                GuarantorName = contract.Guarantor.Name,
+                GuarantorAddress = contract.Guarantor.Address,
+                GuarantorContactNo = contract.Guarantor.ContactNo,
+                GuarantorNIC = contract.Guarantor.NIC,
+
+                LicenceExpireDate = contract.LicenceExpireDate,
+                Instalments = instalments,
+                TotalPaidAmount = instalments.Select(x => x.PaidAmount).ToList().Sum(),
+                TotalFinePaid = fine
+            };
+
+            return model;
+        }
+
         public ContractModel GetContractForInstalment(string contractId)
         {
             var contract = ContractsService.GetById(contractId);
@@ -414,24 +467,258 @@ namespace MS_Finance.Services
             var model = new ContractInstalmentModel()
             {
                 DueDate = currentInstalment.DueDate,
-                TotalPayble = GetTotalPaybleAmount(contractId, paidDate)
+                TotalPayble = GetTotalPaybleAmountForCurrentInstalment(contractId, paidDate)
             };
 
             return model;
         }
 
 
-        public decimal GetTotalPaybleAmount(string contractId, DateTime paidDate)
+        private decimal GetTotalPaybleAmountForCurrentInstalment(string contractId, DateTime paidDate)
         {
             var contract = UoW.Contracts.GetSingle(x => x.Id == contractId);
             var partialyPaidInstalments = GetPartialyPaidInstalments(contractId);
 
             var unsettleInstalmentAmount = partialyPaidInstalments!= null ? partialyPaidInstalments.Sum(x => x.UnsettleAmount) : 0.0m;
-            var fineForPartialyPaidInstalments = CalculateFineForPreviousUnsettleInstalments(contract, paidDate);
+            var fineForPartialyPaidInstalments = CalculateFineForPreviousUnsettleInstalments(contract.Id, paidDate);
             var previousFine = ContractFineService.GetAll().Sum(x => x.Fine);
             var instalment = contract.Insallment;
 
             return (unsettleInstalmentAmount + fineForPartialyPaidInstalments + previousFine + instalment);
         }
+
+        public RevenueRecordModel GetRevenueReport(DateTime from, DateTime to)
+        {
+
+            var payments = this.GetAll().Where(x => x.PaidDate >= from && x.PaidDate <= to)
+                                .Select(x => new RevenueRecord() { AmountWithFine = x.PaidAmount, ContractNo = x.Contract.VehicleNo, Customer = x.Contract.Customer.Name, PaidDate = x.PaidDate })
+                                .OrderBy(x => x.PaidDate)
+                                .ToList();
+
+            var fine = FinePaymentService.GetAll()
+                        .Where(x => x.CreatedOn >= from && x.CreatedOn <= to)
+                        .Select(l => l.Amount)
+                        .ToList().Sum();
+
+            var result = new RevenueRecordModel()
+            {
+                 RevenueRecords = payments,
+                 TotalWithFine = payments.Select(x => x.AmountWithFine).ToList().Sum(),
+                 Fine = fine
+            };
+
+            return result;
+        }
+
+        public decimal GetRevenue(DateTime from, DateTime to)
+        {
+            var instalmentPayments = this.GetAll().Where(x => x.PaidDate >= from && x.PaidDate <= to)
+                                    .Select(x => x.PaidAmount)
+                                    .ToList()
+                                    .Sum();
+
+            var contractSettlements = ContractSettlementService.GetAll()
+                                        .Where(x => x.CreatedOn >= from && x.CreatedOn <= to)
+                                        .Select(x => x.Amount)
+                                        .ToList()
+                                        .Sum();
+
+            return instalmentPayments + contractSettlements;
+        }
+
+        public RevenueRecordModel GetAccruedRevenueReport(DateTime from, DateTime to)
+        {
+            var contractInstalments = this.GetAllWithIncludes(x=>x.Contract, x => x.Contract.Customer)
+                            .Where(x => x.DueDate >= from && x.DueDate <= to)
+                            .ToList();
+
+            var paymentsToBePaidList = contractInstalments.Select(x => new RevenueRecord()
+            {
+                InstalmentAmount = x.Contract.Insallment,
+                Customer = x.Contract.Customer.Name,
+                Fine = CalculateFine(x.Contract.Insallment, x.DueDate, DateTime.Now) + CalculateFine(x.UnsettleAmount, x.DueDate, DateTime.Now),
+                ContractNo = x.Contract.VehicleNo
+            }).ToList();
+
+
+            var result = new RevenueRecordModel()
+            {
+                RevenueRecords = paymentsToBePaidList,
+                TotalInstalmentAmount = paymentsToBePaidList.Sum(x => x.InstalmentAmount),
+                Fine = paymentsToBePaidList.Sum(x => x.Fine)
+            };
+
+            return result;
+
+        }
+
+        public decimal GetAccuredRevenue(DateTime from, DateTime to)
+        {
+            var contractInstalments = this.GetAllWithIncludes(x => x.Contract)
+                            .Where(x => x.DueDate >= from && x.DueDate <= to)
+                            .ToList();
+
+            var accruedRevenue = 0.0m;
+            var toDay = DateTime.Now;
+
+            contractInstalments.ForEach(x =>
+                accruedRevenue += 
+                (x.Contract.Insallment + CalculateFine(x.Contract.Insallment, x.DueDate, toDay) + CalculateFine(x.UnsettleAmount, x.DueDate, toDay))
+            );
+
+            return accruedRevenue;
+        }
+
+
+        public List<RevenueRecord> GetInstalmentsList(DateTime from, DateTime to)
+        {
+            to = to.AddMonths(10);
+
+            var contractInstalments = this.GetAllWithIncludes(x => x.Contract, c => c.Contract.Customer)
+                                        .Where(x => x.DueDate >= from && x.DueDate <= to && x.Paid == (int)InstalmentPaymentStatus.NotPaid)
+                                        .ToList();
+
+            var revenueRecords = new List<RevenueRecord>();
+
+            contractInstalments.ForEach(x => revenueRecords.Add(new RevenueRecord() { Customer = x.Contract.Customer.Name, InstalmentAmount = x.Contract.Insallment, ContractId = x.Contract.Id }));
+
+            return revenueRecords;
+        }
+
+
+        public List<InstalmentApproveModel> GetInstalmentsToBeApproved()
+        {
+            var instalments = UoW.ContractInstallments.GetAllWithIncludes(c => c.Contract, c => c.Contract.Customer)
+                                .Where(x => !x.Approved && x.Paid != (int)InstalmentPaymentStatus.NotPaid)
+                                .OrderBy(x => x.PaidDate)
+                                .ToList();
+
+            var instalmentsApprovalList = new List<InstalmentApproveModel>();
+
+            instalments.ForEach(x => instalmentsApprovalList.Add(new InstalmentApproveModel(){
+               ContractId           = x.Contract.Id,
+               InstalmentId         = x.Id,
+               ContractNo           = x.Contract.VehicleNo,
+               Customer             = x.Contract.Customer.Name,
+               PaidAmount           = x.PaidAmount,
+               CustomerContactNo    = x.Contract.Customer.MobileNumber,
+               PaidDate             = x.PaidDate
+            }));
+
+            return instalmentsApprovalList;
+        }
+
+        public bool ApproveInstalment(string instalmentId)
+        {
+            try
+            {
+                var instalment = this.GetById(instalmentId);
+                instalment.Approved = true;
+                this.Update(instalment);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+        }
+
+        public List<ContractCloseModel> GetContractsToBeClosed()
+        {
+            var contracts = UoW.Contracts
+                            .GetAllWithIncludes(c => c.Customer).Where(x => x.ContractInstallments.All(c => c.Paid != (int)InstalmentPaymentStatus.NotPaid) && x.IsOpen == true)
+                            .ToList();
+
+            //var excess = 
+
+            var contractCloseList = new List<ContractCloseModel>();
+
+            foreach (var item in contracts)
+            {
+                var excess = ExcessService.GetAll().Where(x => x.Contract.Id == item.Id).Sum(y => y.Amount);
+
+                contractCloseList.Add(new ContractCloseModel()
+                {
+                    ContractId = item.Id,
+                    ContractNo = item.VehicleNo,
+                    Customer = item.Customer.Name,
+                    Loan = item.Amount,
+                    Instalments = item.NoOfInstallments,
+                    TotalPayble = (GetTotalPaybleAmountForCurrentInstalment(item.Id, DateTime.Now) - item.Insallment - excess),
+                    TotalPaidAmount = GetTotalPaidPayment(item.Id)
+                });
+            }
+
+            return contractCloseList;
+        }
+
+        public decimal GetTotalPaidPayment(string contractId)
+        {
+            return this.GetAll().Where(x => x.Contract.Id == contractId).Sum(c => c.PaidAmount);
+        }
+
+        public decimal GetPaybleAtContractClosingDate(string contractId, DateTime closedDate)
+        {
+            var excess = ExcessService.GetAll().Where(x => x.Contract.Id == contractId).Sum(y => y.Amount);
+            var partialyPaidInstalments = GetPartialyPaidInstalments(contractId);
+
+            var unsettleInstalmentAmount = partialyPaidInstalments != null ? partialyPaidInstalments.Sum(x => x.UnsettleAmount) : 0.0m;
+            var fineForPartialyPaidInstalments = CalculateFineForPreviousUnsettleInstalments(contractId, closedDate);
+            var previousFine = ContractFineService.GetAll().Sum(x => x.Fine);
+
+            return (unsettleInstalmentAmount + fineForPartialyPaidInstalments + previousFine - excess);
+        }
+
+        public bool CloseContract(string contractId, decimal settlementAmount, string createdByUserId, string createdByUserName, DateTime closedDate)
+        {
+            decimal currentPayment = settlementAmount;
+
+            AddToContractSettlement(contractId, settlementAmount, createdByUserId, createdByUserName, closedDate);
+
+            RecoverFineByExcess(contractId, closedDate);
+            RecoverFineByCurrentInstalment(contractId, closedDate, ref currentPayment);
+
+            RecoverUnsettledInstalmentsByExcess(contractId);
+            RecoverUnsettledInstalmentsByCurrentInstalment(contractId, ref currentPayment);
+
+            var contract = UoW.Contracts.GetSingle(x => x.Id == contractId);
+            contract.IsOpen = false;
+            UoW.Commit();
+
+            return true;
+        }
+
+        public int GetNumberOfInstalments(DateTime from, DateTime to)
+        {
+
+            return this.GetAll()
+                       .Where(x => x.DueDate >= from && x.DueDate <= to && x.Paid == (int)InstalmentPaymentStatus.NotPaid)
+                       .Count();
+        }
+
+        public int GetNumberOfContracts(DateTime from, DateTime to)
+        {
+            return ContractsService.GetAll().Where(x => x.CreatedOn >= from && x.CreatedOn <= to).Count();
+        }
+
+        private void AddToContractSettlement(string contractId, decimal settlementAmount, string createdByUserId, string createdByUserName, DateTime closedDate)
+        {
+            var contract = UoW.Contracts.GetSingle(x => x.Id == contractId);
+
+            var settlement = new ContractSettlement()
+            {
+                Amount = settlementAmount,
+                Contract = contract,
+                CreatedOn = closedDate,
+                CreatedByUserId = createdByUserId,
+                CreatedByUserName = createdByUserName
+            };
+
+            UoW.ContractSettlements.Add(settlement);
+            UoW.Commit();
+        }
+      
     }
 }

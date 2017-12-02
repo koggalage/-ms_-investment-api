@@ -9,7 +9,7 @@ namespace MS_Finance.Business.Interfaces
 {
     public interface IExcessService
     {
-        IList<Excess> GetAll();
+        IQueryable<Excess> GetAll();
 
         Excess GetById(string id);
 

@@ -41,9 +41,85 @@ namespace MS_Finance.Controllers
         }
 
         [HttpGet]
-        public virtual HttpResponseMessage GetCurrentInstalmentDetails(string contractId)
+        public virtual HttpResponseMessage GetCurrentInstalmentDetails(string contractId, DateTime? paidDate)
         {
             return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetCurrentInstalmentDetails(contractId, DateTime.Now));
         }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetContractsToBeClosed()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetContractsToBeClosed());
+        }
+
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetPaybleAtContractClosingDate(string contractId, DateTime paidDate)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetPaybleAtContractClosingDate(contractId, paidDate));
+        }
+
+
+        [HttpPost]
+        public virtual HttpResponseMessage CloseContract(ContractCloseModel closeModel)
+        {
+            var userId = User.Identity.GetUserId();
+            var userName = User.Identity.Name;
+
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.CloseContract(closeModel.ContractId, closeModel.SettlementAmount, userId, userName, closeModel.ClosedDate));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public virtual HttpResponseMessage GetInstalmentsToBeApproved()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetInstalmentsToBeApproved());
+        }
+
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+        public virtual HttpResponseMessage ApproveInstalment(string instalmentId)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.ApproveInstalment(instalmentId));
+        }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetNumberOfInstalmentsForToday()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetNumberOfInstalments(DateTime.Now, DateTime.Now));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public virtual HttpResponseMessage GetAccuredRevenueForToday()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetAccuredRevenue(DateTime.Now, DateTime.Now));
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public virtual HttpResponseMessage GetRevenueForToday()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetRevenue(DateTime.Now, DateTime.Now));
+        }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetNumberOfContracts()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetNumberOfContracts(DateTime.Now, DateTime.Now));
+        }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetInstalmentsForToday()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetInstalmentsList(DateTime.Now, DateTime.Now));
+        }
+        
+        [HttpGet]
+        public virtual HttpResponseMessage GetContractDetails(string contractId)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetContractDetails(contractId));
+        }
+
     }
 }

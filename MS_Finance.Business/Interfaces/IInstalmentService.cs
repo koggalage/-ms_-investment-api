@@ -29,7 +29,7 @@ namespace MS_Finance.Business.Interfaces
 
         List<ContractInstallment> GetPartialyPaidInstalments(string contractId);
 
-        decimal CalculateFineForPreviousUnsettleInstalments(Contract contract, DateTime paidDate);
+        decimal CalculateFineForPreviousUnsettleInstalments(string contractId, DateTime paidDate);
 
         void AddOrUpdateFine(string contractId, decimal fine);
 
@@ -38,5 +38,33 @@ namespace MS_Finance.Business.Interfaces
         decimal CalculateFineForCurrentInstalmentAndUpdateExcess(string contractId, DateTime dueDate, DateTime paidDate);
 
         ContractInstalmentModel GetCurrentInstalmentDetails(string contractId, DateTime paidDate);
+
+        RevenueRecordModel GetRevenueReport(DateTime from, DateTime to);
+
+        RevenueRecordModel GetAccruedRevenueReport(DateTime from, DateTime to);
+
+        decimal GetTotalPaidPayment(string contractId);
+
+        List<ContractCloseModel> GetContractsToBeClosed();
+
+        bool CloseContract(string contractId, decimal settlementAmount, string createdByUserId, string createdByUserName, DateTime closedDate);
+
+        decimal GetPaybleAtContractClosingDate(string contractId, DateTime closedDate);
+
+        List<InstalmentApproveModel> GetInstalmentsToBeApproved();
+
+        bool ApproveInstalment(string instalmentId);
+
+        int GetNumberOfInstalments(DateTime from, DateTime to);
+
+        decimal GetAccuredRevenue(DateTime from, DateTime to);
+
+        decimal GetRevenue(DateTime from, DateTime to);
+
+        int GetNumberOfContracts(DateTime from, DateTime to);
+
+        List<RevenueRecord> GetInstalmentsList(DateTime from, DateTime to);
+
+        ContractDetailModel GetContractDetails(string contractId);
     }
 }

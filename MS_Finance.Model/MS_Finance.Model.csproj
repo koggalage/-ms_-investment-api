@@ -114,12 +114,16 @@
   <ItemGroup>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BrokerModel.cs" />
+    <Compile Include="Models\ContractCloseModel.cs" />
+    <Compile Include="Models\ContractDetailModel.cs" />
     <Compile Include="Models\ContractInstalmentModel.cs" />
     <Compile Include="Models\ContractModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\GetBrokersDetailsVM.cs" />
     <Compile Include="Models\GuarantorModel.cs" />
     <Compile Include="Models\GetCustomerDetailsVM.cs" />
+    <Compile Include="Models\InstalmentApproveModel.cs" />
+    <Compile Include="Models\RevenueRecordModel.cs" />
     <Compile Include="Models\SearchOptionsModel.cs" />
     <Compile Include="MSDataContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -140,6 +144,7 @@
     <Compile Include="Repositories\OA\Contract.cs" />
     <Compile Include="Repositories\OA\ContractFine.cs" />
     <Compile Include="Repositories\OA\ContractInstallment.cs" />
+    <Compile Include="Repositories\OA\ContractSettlement.cs" />
     <Compile Include="Repositories\OA\Customer.cs" />
     <Compile Include="Repositories\OA\Department.cs" />
     <Compile Include="Repositories\OA\Excess.cs" />

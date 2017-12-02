@@ -35,6 +35,11 @@ namespace MS_Finance.Business.Services
             return UoW.GetRepository<T>().GetAll();
         }
 
+        public virtual IQueryable<T> GetAllWithIncludes(params Expression<Func<T, object>>[] properties)
+        {
+            return UoW.GetRepository<T>().GetAllWithIncludes(properties);
+        }
+
         public virtual T GetSingle(Expression<Func<T, bool>> predicate)
         {
             return UoW.GetRepository<T>().GetSingle(predicate);

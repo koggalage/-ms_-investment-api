@@ -1,4 +1,5 @@
-﻿using MS_Finance.Business.Interfaces;
+﻿using MS_Finance.Business.Exceptions;
+using MS_Finance.Business.Interfaces;
 using MS_Finance.Business.Models.EnumsAndConstants;
 using MS_Finance.Business.Services;
 using MS_Finance.Model.Models;
@@ -8,6 +9,7 @@ using MS_Finance.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 
 namespace MS_Finance.Services
@@ -30,11 +32,15 @@ namespace MS_Finance.Services
         }
 
 
-        public IList<Contract> GetAll()
+        public IQueryable<Contract> GetAll()
         {
             return base
-                .GetAll()
-                .ToList();
+                .GetAll();
+        }
+
+        public IQueryable<Contract> GetAllWithIncludes(params Expression<Func<Contract, object>>[] properties)
+        {
+            return base.GetAllWithIncludes(properties);
         }
 
         public Contract GetById(string id)
@@ -93,7 +99,6 @@ namespace MS_Finance.Services
             var customer = UoW.Customers.GetSingle(x => x.Id == contractModel.CustomerId);
             var broker = UoW.Brokers.GetSingle(x => x.Id == contractModel.BrokerId);
 
-
             var contract = new Contract()
             {
                 ContractNo          = contractModel.ContractNo,
@@ -111,24 +116,22 @@ namespace MS_Finance.Services
                 Broker              = broker
             };
 
+            if (CustomerHasRunningContract(customer.Id))
+                throw new ContractServiceException("Customer already has running contract");
 
-            try
-            {
-
-                var emptyInstalments = CreateEmptyInstalmentsForContract(contractModel, contract.Id);
-                contract.ContractInstallments = emptyInstalments;
-                UoW.Contracts.Add(contract);
-                UoW.Commit();
-
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            var emptyInstalments = CreateEmptyInstalmentsForContract(contractModel, contract.Id);
+            contract.ContractInstallments = emptyInstalments;
+            UoW.Contracts.Add(contract);
+            UoW.Commit();
 
             return true;
         }
 
+        private bool CustomerHasRunningContract(string customerId)
+        {
+            var contract = this.GetAll().Where(x => x.Customer.Id == customerId && x.IsOpen).FirstOrDefault();
+            return contract != null ? contract.IsOpen : false;
+        }
 
         private List<ContractInstallment> CreateEmptyInstalmentsForContract(ContractModel contractModel, string contractId)
         {
@@ -186,6 +189,26 @@ namespace MS_Finance.Services
             }).ToList();
         }
 
+        public ContractReportModel GetOpenOrClosedContracts(bool open = true)
+        {
+            var model = new ContractReportModel();
+
+
+            var contracts = base.GetAll().Where(x => x.IsOpen == open).Select(x => new ContractModel()
+            {
+                Id = x.Id,
+                Amount = x.Amount,
+                VehicleNo = x.VehicleNo,
+                CustomerName = x.Customer != null ? x.Customer.Name : string.Empty,
+                ContractNo = x.Customer != null ? x.Customer.MobileNumber : string.Empty,
+            }).ToList();
+
+            model.Contracts = contracts;
+            model.NoOfContracts = contracts.Count;
+
+            return model;
+        }
+
 
         public List<Customer> GetCustomersForOpenContractsModel()
         {
@@ -219,6 +242,10 @@ namespace MS_Finance.Services
             return Insallment;
         }
 
+        public int GetRunningContractsCount(DateTime from, DateTime to)
+        {
+            return this.GetAll().Where(x => x.IsOpen).Count();
+        }
 
     }
 }

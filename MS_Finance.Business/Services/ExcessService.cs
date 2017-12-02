@@ -17,9 +17,9 @@ namespace MS_Finance.Business.Services
 
         }
 
-        public IList<Excess> GetAll()
+        public IQueryable<Excess> GetAll()
         {
-            return base.GetAll().ToList();
+            return base.GetAll();
         }
 
         public Excess GetById(string id)

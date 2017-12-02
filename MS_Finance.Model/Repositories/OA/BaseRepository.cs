@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.Linq.Expressions;
 
 namespace MS_Finance.Model.Repositories.OA
 {
@@ -23,6 +24,16 @@ namespace MS_Finance.Model.Repositories.OA
         public IQueryable<T> GetAll()
         {
             return _DbSet.AsQueryable<T>();
+        }
+
+        public virtual IQueryable<T> GetAllWithIncludes(Expression<Func<T, object>>[] properties)
+        {
+            var query = _DbSet as IQueryable<T>;
+
+            query = properties
+                       .Aggregate(query, (current, property) => current.Include(property));
+
+            return query.AsNoTracking();
         }
 
         public T GetSingle(System.Linq.Expressions.Expression<Func<T, bool>> predicate)

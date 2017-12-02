@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace MS_Finance.Model.Repositories.OA
 {
-    public class FinePayment
+    public class ContractSettlement
     {
-
-        public FinePayment()
+        public ContractSettlement()
         {
             Id = Guid.NewGuid().ToString();
         }
@@ -18,10 +17,12 @@ namespace MS_Finance.Model.Repositories.OA
 
         public decimal Amount { get; set; }
 
+        public string CreatedByUserId { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
+        public string CreatedByUserName { get; set; }
+
         public virtual Contract Contract { get; set; }
-
     }
-
 }

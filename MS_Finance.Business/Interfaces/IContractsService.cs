@@ -3,6 +3,7 @@ using MS_Finance.Model.Repositories.OA;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +11,9 @@ namespace MS_Finance.Business.Interfaces
 {
     public interface IContractsService
     {
-        IList<Contract> GetAll();
+        IQueryable<Contract> GetAll();
+
+        IQueryable<Contract> GetAllWithIncludes(params Expression<Func<Contract, object>>[] properties);
 
         Contract GetById(string id);
 
@@ -34,5 +37,9 @@ namespace MS_Finance.Business.Interfaces
         List<ContractModel> GetVehicleNoByCustomerIdModel(string customerId);
 
         decimal GetMonthlyInstallmentModel(decimal Amount, int NoOfInstallments);
+
+        int GetRunningContractsCount(DateTime from, DateTime to);
+
+        ContractReportModel GetOpenOrClosedContracts(bool open = true);
     }
 }

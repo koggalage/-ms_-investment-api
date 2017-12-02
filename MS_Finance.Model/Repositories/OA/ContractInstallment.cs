@@ -34,6 +34,8 @@ namespace MS_Finance.Model.Repositories.OA
 
         public int Paid { get; set; }
 
+        public bool Approved { get; set; }
+
         public virtual Contract Contract { get; set; }
     }
 }

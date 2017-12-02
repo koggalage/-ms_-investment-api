@@ -12,6 +12,8 @@ namespace MS_Finance.Model.Repositories.Interfaces
     {
         IQueryable<T> GetAll();
 
+        IQueryable<T> GetAllWithIncludes(params Expression<Func<T, object>>[] properties);
+
         T GetSingle(Expression<Func<T, bool>> predicate);
 
         //T CreateTrackedInstance();

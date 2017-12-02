@@ -55,7 +55,7 @@ namespace MS_Finance.Controllers
         [HttpGet]
         public virtual HttpResponseMessage GetActiveContracts()
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetActiveContracts());
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetOpenOrClosedContracts(true));
         }
 
         public virtual HttpResponseMessage GetCustomersForOpenContracts()
@@ -73,6 +73,12 @@ namespace MS_Finance.Controllers
         public virtual HttpResponseMessage GetMonthlyInstallment(decimal Amount, int NoOfInstallments)
         {
             return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetMonthlyInstallmentModel(Amount, NoOfInstallments));
+        }
+
+        [HttpGet]
+        public virtual HttpResponseMessage GetClosedContracts() 
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetOpenOrClosedContracts(false));
         }
     }
 }

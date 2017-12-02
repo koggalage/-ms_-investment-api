@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace MS_Finance.Model.Models
 {
+    public class ContractReportModel
+    {
+        public List<ContractModel> Contracts { get; set; }
+
+        public int NoOfContracts { get; set; }
+    }
+
     public class ContractModel
     {
         public string Id { get; set; }
