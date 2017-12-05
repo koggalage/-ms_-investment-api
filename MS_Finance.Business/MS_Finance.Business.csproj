@@ -48,6 +48,7 @@
     <Compile Include="Interfaces\ICustomerService.cs" />
     <Compile Include="Interfaces\IDefaultPersistentService.cs" />
     <Compile Include="Interfaces\IExcessService.cs" />
+    <Compile Include="Interfaces\IFileUploadService.cs" />
     <Compile Include="Interfaces\IFinePaymentService.cs" />
     <Compile Include="Interfaces\IGuarantorService.cs" />
     <Compile Include="Interfaces\IInstalmentService.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\DefaultPersistentService.cs" />
     <Compile Include="Services\ExcessService.cs" />
+    <Compile Include="Services\FileUploadService.cs" />
     <Compile Include="Services\FinePaymentService.cs" />
     <Compile Include="Services\GuarantorService.cs" />
     <Compile Include="Services\InstalmentService.cs" />

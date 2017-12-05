@@ -41,5 +41,7 @@ namespace MS_Finance.Business.Interfaces
         int GetRunningContractsCount(DateTime from, DateTime to);
 
         ContractReportModel GetOpenOrClosedContracts(bool open = true);
+
+        void UploadContractFiles(string contractId, string imageName, string createdByUserId, string createdByUserName);
     }
 }

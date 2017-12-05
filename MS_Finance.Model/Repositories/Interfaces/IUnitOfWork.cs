@@ -34,6 +34,8 @@ namespace MS_Finance.Model.Repositories.Interfaces
 
         IRepository<ContractSettlement> ContractSettlements { get; }
 
+        IRepository<ContractFile> ContractFiles { get; }
+
         #endregion
     }
 }

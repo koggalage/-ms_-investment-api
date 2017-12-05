@@ -247,5 +247,25 @@ namespace MS_Finance.Services
             return this.GetAll().Where(x => x.IsOpen).Count();
         }
 
+        public void UploadContractFiles(string contractId, string imageName, string createdByUserId, string createdByUserName)
+        {
+            //string localhostPath = "http://localhost:53438/ContractFiles/";
+
+            var contract = UoW.Contracts.GetSingle(x => x.Id == contractId);
+
+            var contractFile = new ContractFile()
+            {
+                Contract = contract,
+                FilePath = imageName,
+                CreatedByUserId = createdByUserId,
+                CreatedByUserName = createdByUserName,
+                CreatedOn = DateTime.Now
+            };
+
+            UoW.ContractFiles.Add(contractFile);
+            UoW.Commit();
+            //_fileUploadService.
+        }
+
     }
 }

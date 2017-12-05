@@ -142,6 +142,7 @@
     <Compile Include="Repositories\OA\BaseRepository.cs" />
     <Compile Include="Repositories\OA\Broker.cs" />
     <Compile Include="Repositories\OA\Contract.cs" />
+    <Compile Include="Repositories\OA\ContractFile.cs" />
     <Compile Include="Repositories\OA\ContractFine.cs" />
     <Compile Include="Repositories\OA\ContractInstallment.cs" />
     <Compile Include="Repositories\OA\ContractSettlement.cs" />

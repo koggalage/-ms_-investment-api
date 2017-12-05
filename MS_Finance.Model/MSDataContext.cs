@@ -40,5 +40,8 @@ namespace MS_Finance.Model
         public DbSet<FinePayment> FinePayments { get; set; }
 
         public DbSet<ContractSettlement> ContractSettlements { get; set; }
+
+        public DbSet<ContractFile> ContractFiles { get; set; }
+
     }
 }

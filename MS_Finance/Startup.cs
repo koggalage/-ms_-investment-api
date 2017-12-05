@@ -54,6 +54,7 @@ namespace MS_Finance
             kernel.Bind<IExcessService>().To<ExcessService>();
             kernel.Bind<IFinePaymentService>().To<FinePaymentService>();
             kernel.Bind<IContractSettlementService>().To<ContractSettlementService>();
+            kernel.Bind<IFileUploadService>().To<FileUploadService>();
 
             return kernel;
         }
