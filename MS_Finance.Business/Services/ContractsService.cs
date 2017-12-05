@@ -98,6 +98,7 @@ namespace MS_Finance.Services
         {
             var customer = UoW.Customers.GetSingle(x => x.Id == contractModel.CustomerId);
             var broker = UoW.Brokers.GetSingle(x => x.Id == contractModel.BrokerId);
+            var guarantor = UoW.Guarantors.GetSingle(x => x.Id == contractModel.GuarantorId);
 
             var contract = new Contract()
             {
@@ -113,7 +114,8 @@ namespace MS_Finance.Services
                 LicenceExpireDate   = DateTime.Now.AddYears(2),
                 CreatedOn           = DateTime.Now,
                 Customer            = customer,
-                Broker              = broker
+                Broker              = broker,
+                Guarantor           = guarantor
             };
 
             if (CustomerHasRunningContract(customer.Id))

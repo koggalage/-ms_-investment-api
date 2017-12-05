@@ -13,7 +13,7 @@ using System.Web.Security;
 namespace MS_Finance.Controllers
 {
 
-    [RoutePrefix("api/Contract")]
+    [RoutePrefix("api/Guarantor")]
     public class GuarantorController : BaseApiController
     {
 
@@ -40,6 +40,12 @@ namespace MS_Finance.Controllers
         public virtual HttpResponseMessage GetGuarantorExistency(string guarantorNIC)
         {
             return Request.CreateResponse(HttpStatusCode.OK, _guarantorService.IsGuarantorExist(guarantorNIC));
+        }
+
+        [HttpGet]
+        public virtual HttpResponseMessage LoadGuarantorDetails()
+        {
+            return Request.CreateResponse<GurantorVM>(HttpStatusCode.OK, _guarantorService.GetGuarantorDetails());
         }
 
     }

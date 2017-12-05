@@ -50,7 +50,6 @@ namespace MS_Finance.Controllers
         }
 
         [HttpGet]
-        [HttpPost]
         public virtual HttpResponseMessage LoadBrokerDetails()
         {
             return Request.CreateResponse<GetBrokerDetailsVM>(HttpStatusCode.OK, _contractsService.GetBrokersModel());

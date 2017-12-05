@@ -73,5 +73,25 @@ namespace MS_Finance.Services
                 .GetAll()
                 .Where(x => x.NIC == guarantorNIC).FirstOrDefault();
         }
+
+        public GurantorVM GetGuarantorDetails()
+        {
+            var gurantorList = this.GetAll();
+
+            var Model = new GurantorVM();
+
+            Model.GuarantorDetails = new List<GuarantorModel>();
+
+            foreach (var gurantor in gurantorList)
+            {
+                Model.GuarantorDetails.Add(new GuarantorModel()
+                {
+                    Name = gurantor.Name,
+                    NIC = gurantor.NIC
+                });
+            }
+
+            return Model;
+        }
     }
 }

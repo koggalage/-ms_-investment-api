@@ -13,5 +13,7 @@ namespace MS_Finance.Business.Interfaces
         bool CreateGuarantor(GuarantorModel guarantorModel);
 
         Guarantor IsGuarantorExist(string guarantorNIC);
+
+        GurantorVM GetGuarantorDetails();
     }
 }

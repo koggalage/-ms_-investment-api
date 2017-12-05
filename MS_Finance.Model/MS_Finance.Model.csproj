@@ -122,6 +122,7 @@
     <Compile Include="Models\GetBrokersDetailsVM.cs" />
     <Compile Include="Models\GuarantorModel.cs" />
     <Compile Include="Models\GetCustomerDetailsVM.cs" />
+    <Compile Include="Models\GurantorVM.cs" />
     <Compile Include="Models\InstalmentApproveModel.cs" />
     <Compile Include="Models\RevenueRecordModel.cs" />
     <Compile Include="Models\SearchOptionsModel.cs" />
