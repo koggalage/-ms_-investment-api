@@ -416,7 +416,7 @@ namespace MS_Finance.Services
                             .Where(t => t.Id == contractId)
                             .FirstOrDefault();
 
-            var fine = FinePaymentService.GetAll().Where(x => x.Contract.Id == contractId).Select(x => x.Amount).Sum();
+            var fine = FinePaymentService.GetAll().Where(x => x.Contract.Id == contractId).ToList().Select(x => x.Amount).Sum();
 
             var instalments = GetInstalmentsForContract(contractId);
 

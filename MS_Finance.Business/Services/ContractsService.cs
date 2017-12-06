@@ -87,7 +87,7 @@ namespace MS_Finance.Services
             searchTerm = !string.IsNullOrEmpty(searchTerm) ? searchTerm.ToLower() : string.Empty;
 
             var result = (from a in base.GetAll()
-                          where a.IsOpen && (a.VehicleNo.ToLower() == searchTerm || a.Customer.NIC.ToLower() == searchTerm)
+                          where (a.VehicleNo.ToLower() == searchTerm || a.Customer.NIC.ToLower() == searchTerm || a.Customer.Name.ToLower().Contains(searchTerm))
                           select new SearchOptionsModel { VehicleNumber = a.VehicleNo, Name = a.Customer.Name, NIC = a.Customer.NIC, ContractId = a.Id })
                          .ToList();
 
