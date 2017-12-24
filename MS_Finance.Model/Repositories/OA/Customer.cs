@@ -31,6 +31,8 @@ namespace MS_Finance.Model.Repositories.OA
 
         public string CreatedByUserName { get; set; }
 
+        public string Description { get; set; }
+
         public virtual List<Contract> Contracts { get; set; }
     }
 }

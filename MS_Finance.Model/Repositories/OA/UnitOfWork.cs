@@ -89,5 +89,12 @@ namespace MS_Finance.Model.Repositories.OA
         {
             get { return _ContractFiles ?? (_ContractFiles = new BaseRepository<ContractFile>(Context)); }
         }
+
+        private IRepository<ContractRate> _ContractRates { get; set; }
+        public IRepository<ContractRate> ContractRates
+        {
+            get { return _ContractRates ?? (_ContractRates = new BaseRepository<ContractRate>(Context)); }
+        }
+
     }
 }

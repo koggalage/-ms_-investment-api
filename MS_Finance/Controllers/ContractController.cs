@@ -133,6 +133,18 @@ namespace MS_Finance.Controllers
             }
         }
 
-        
+        [HttpGet]
+        public HttpResponseMessage GetDocumentCharge(decimal amount)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetDocumentCharge(amount));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public HttpResponseMessage GetDocumentChargeReport(DateTime from, DateTime to)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetDocumentChargeReport(from, to));
+        }
+
     }
 }

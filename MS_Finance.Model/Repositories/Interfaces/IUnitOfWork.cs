@@ -36,6 +36,8 @@ namespace MS_Finance.Model.Repositories.Interfaces
 
         IRepository<ContractFile> ContractFiles { get; }
 
+        IRepository<ContractRate> ContractRates { get; }
+
         #endregion
     }
 }

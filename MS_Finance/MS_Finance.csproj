@@ -274,6 +274,7 @@
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\BrokerController.cs" />
     <Compile Include="Controllers\ContractController.cs" />
+    <Compile Include="Controllers\ContractRateController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\GuarantorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

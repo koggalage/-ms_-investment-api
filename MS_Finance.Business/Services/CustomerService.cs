@@ -64,7 +64,8 @@ namespace MS_Finance.Services
                  Occupation        = customerModel.Occupation,
                  CreatedDate       = customerModel.CreatedOn,
                  CreatedByUserId   = customerModel.CreatedByUserId,
-                 CreatedByUserName = customerModel.CreatedByUserName
+                 CreatedByUserName = customerModel.CreatedByUserName,
+                 Description       = customerModel.Description
             };
 
             base.Add(customer);

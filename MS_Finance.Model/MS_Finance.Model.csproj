@@ -118,6 +118,7 @@
     <Compile Include="Models\ContractDetailModel.cs" />
     <Compile Include="Models\ContractInstalmentModel.cs" />
     <Compile Include="Models\ContractModel.cs" />
+    <Compile Include="Models\ContractRateModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\GetBrokersDetailsVM.cs" />
     <Compile Include="Models\GuarantorModel.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Repositories\OA\ContractFile.cs" />
     <Compile Include="Repositories\OA\ContractFine.cs" />
     <Compile Include="Repositories\OA\ContractInstallment.cs" />
+    <Compile Include="Repositories\OA\ContractRate.cs" />
     <Compile Include="Repositories\OA\ContractSettlement.cs" />
     <Compile Include="Repositories\OA\Customer.cs" />
     <Compile Include="Repositories\OA\Department.cs" />

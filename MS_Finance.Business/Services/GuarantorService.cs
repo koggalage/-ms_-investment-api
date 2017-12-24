@@ -52,14 +52,15 @@ namespace MS_Finance.Services
         {
             var guarantor = new Guarantor()
             {
-                Name = guarantorModel.Name,
-                Address = guarantorModel.Address,
-                ContactNo = guarantorModel.ContactNo,
-                NIC = guarantorModel.NIC,
-                Occupation = guarantorModel.Occupation,
-                CreatedDate = DateTime.Now,
-                CreatedByUserId = guarantorModel.CreatedByUserId,
-                CreatedByUserName = guarantorModel.CreatedByUserName
+                Name                = guarantorModel.Name,
+                Address             = guarantorModel.Address,
+                ContactNo           = guarantorModel.ContactNo,
+                NIC                 = guarantorModel.NIC,
+                Occupation          = guarantorModel.Occupation,
+                CreatedDate         = DateTime.Now,
+                CreatedByUserId     = guarantorModel.CreatedByUserId,
+                CreatedByUserName   = guarantorModel.CreatedByUserName,
+                Description         = guarantorModel.Description
             };
 
             base.Add(guarantor);

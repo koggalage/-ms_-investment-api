@@ -46,5 +46,9 @@ namespace MS_Finance.Model.Models
         public DateTime ContractCreatedOn { get; set; }
 
         public DateTime ContractDueDate { get; set; }
+
+        public decimal DocumentCharge { get; set; }
+
+        public string Description { get; set; }      
     }
 }

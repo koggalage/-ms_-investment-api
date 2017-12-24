@@ -1,4 +1,5 @@
-﻿using MS_Finance.Business.Interfaces;
+﻿using MS_Finance.Business.Exceptions;
+using MS_Finance.Business.Interfaces;
 using MS_Finance.Business.Services;
 using MS_Finance.Model.Models;
 using MS_Finance.Model.Repositories.Interfaces;
@@ -55,29 +56,35 @@ namespace MS_Finance.Business
         
         public bool CreateBroker(BrokerModel brokerModel)
         {
+            if (IsBrokerExists(brokerModel.NIC))
+                throw new ContractServiceException(brokerModel.NIC +  " is existing broker");
+
             var broker = new Broker()
             {
-                Name = brokerModel.Name,
-                Address = brokerModel.Address,
-                ContactNo = brokerModel.ContactNo,
-                NIC = brokerModel.NIC,
-                Occupation = brokerModel.Occupation,
-                CreatedDate = DateTime.Now,
-                CreatedByUserId = brokerModel.CreatedByUserId,
-                CreatedByUserName = brokerModel.CreatedByUserName
+                Name                = brokerModel.Name,
+                Address             = brokerModel.Address,
+                ContactNo           = brokerModel.ContactNo,
+                NIC                 = brokerModel.NIC,
+                Occupation          = brokerModel.Occupation,
+                CreatedDate         = DateTime.Now,
+                CreatedByUserId     = brokerModel.CreatedByUserId,
+                CreatedByUserName   = brokerModel.CreatedByUserName,
+                Description         = brokerModel.Description
             };
 
             base.Add(broker);
-            //_brokerRepository.CreateBroker(broker);
 
             return true;
         }
 
+        private bool IsBrokerExists(string brokerNIC)
+        {
+            var broker = this.GetAll().Where(x => x.NIC == brokerNIC).FirstOrDefault();
+            return broker != null;
+        }
+
         public Broker IsBrokerExist(string brokerNIC)
         {
-            //var brokerByNIC = _brokerRepository.GetBrokerByNIC(brokerNIC);
-            //return brokerByNIC;
-
             return base.GetAll()
                 .Where(x => x.NIC == brokerNIC).FirstOrDefault();
         }

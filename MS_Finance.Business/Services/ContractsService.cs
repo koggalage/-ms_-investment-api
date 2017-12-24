@@ -19,16 +19,19 @@ namespace MS_Finance.Services
         protected ICustomerService CustomerService;
         protected IBrokerService BrokerService;
         protected IGuarantorService GuarantorService;
+        protected IContractRateService ContractRateService;
 
         public ContractsService(IUnitOfWork UoW,
             ICustomerService CustomerService,
             IBrokerService BrokerService,
-            IGuarantorService GuarantorService)
+            IGuarantorService GuarantorService,
+            IContractRateService ContractRateService)
             : base(UoW)
         {
             this.CustomerService = CustomerService;
             this.BrokerService = BrokerService;
             this.GuarantorService = GuarantorService;
+            this.ContractRateService = ContractRateService;
         }
 
 
@@ -87,7 +90,7 @@ namespace MS_Finance.Services
             searchTerm = !string.IsNullOrEmpty(searchTerm) ? searchTerm.ToLower() : string.Empty;
 
             var result = (from a in base.GetAll()
-                          where (a.VehicleNo.ToLower() == searchTerm || a.Customer.NIC.ToLower() == searchTerm || a.Customer.Name.ToLower().Contains(searchTerm))
+                          where (a.VehicleNo.ToLower() == searchTerm || a.Customer.NIC.ToLower() == searchTerm || a.Customer.Name.ToLower().Contains(searchTerm) || a.Customer.MobileNumber == searchTerm)
                           select new SearchOptionsModel { VehicleNumber = a.VehicleNo, Name = a.Customer.Name, NIC = a.Customer.NIC, ContractId = a.Id })
                          .ToList();
 
@@ -104,6 +107,7 @@ namespace MS_Finance.Services
             {
                 ContractNo          = contractModel.ContractNo,
                 Amount              = contractModel.Amount,
+                DocumentCharge      = (GetRate((int)ContractRateType.DocumentCharges, DateTime.Now) * contractModel.Amount),
                 NoOfInstallments    = contractModel.NoOfInstallments,
                 Insallment          = contractModel.Insallment,
                 Type                = contractModel.Type,
@@ -115,7 +119,8 @@ namespace MS_Finance.Services
                 CreatedOn           = DateTime.Now,
                 Customer            = customer,
                 Broker              = broker,
-                Guarantor           = guarantor
+                Guarantor           = guarantor,
+                Description         = contractModel.Description
             };
 
             if (CustomerHasRunningContract(customer.Id))
@@ -238,10 +243,18 @@ namespace MS_Finance.Services
 
         public decimal GetMonthlyInstallmentModel(decimal Amount, int NoOfInstallments)
         {
-            double interestRate = (NoOfInstallments <= 6) ? 0.30 : (NoOfInstallments > 6) ? 0.36 : double.NaN;
+            //double interestRate = (NoOfInstallments <= 6) ? 0.30 : (NoOfInstallments > 6) ? 0.36 : double.NaN;
+            var rate = NoOfInstallments <= 6 ? GetRate((int)ContractRateType.InterestForShortTerm, DateTime.Now) : GetRate((int)ContractRateType.InterestForLongTerm, DateTime.Now);
+
+            decimal interestRate = rate;
             decimal Insallment = ((Amount * Convert.ToDecimal(interestRate)) + Amount) / 12;
             Insallment = Math.Round(Insallment, 2);
             return Insallment;
+        }
+
+        public decimal GetDocumentCharge(decimal amount)
+        {
+            return amount * GetRate((int)ContractRateType.DocumentCharges, DateTime.Now);
         }
 
         public int GetRunningContractsCount(DateTime from, DateTime to)
@@ -269,5 +282,36 @@ namespace MS_Finance.Services
             //_fileUploadService.
         }
 
+        public decimal GetRate(int type, DateTime validFor)
+        {
+            var historicalRate = ContractRateService.GetAll().Where(x => x.Type == type && validFor >= x.ValidFrom && validFor <= x.ValidUntil).FirstOrDefault();
+
+            if (historicalRate != null)
+                return historicalRate.Value / 100;
+
+            var currentRate = ContractRateService.GetAll().Where(x => x.Type == type && validFor >= x.ValidFrom && !x.ValidUntil.HasValue).FirstOrDefault();
+
+            if (currentRate != null)
+                return currentRate.Value / 100;
+
+            throw new ContractServiceException("No rate has been define");
+        }
+
+
+        public DocumentChargeRecordModel GetDocumentChargeReport(DateTime from, DateTime to)
+        {
+            var payments = this.GetAll()
+                            .Where(x => x.CreatedOn >= from && x.CreatedOn <= to)
+                            .Select(c => new DocumentChargeRecord() { VehicleNo = c.VehicleNo, Customer = c.Customer.Name, Amount = c.DocumentCharge, PaidDate = c.CreatedOn })
+                            .ToList();
+
+            var result = new DocumentChargeRecordModel()
+            {
+                DocChargeRecords = payments,
+                Total            = payments.Select(x => x.Amount).ToList().Sum()
+            };
+
+            return result;
+        }
     }
 }

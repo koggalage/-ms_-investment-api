@@ -34,4 +34,22 @@ namespace MS_Finance.Model.Models
 
         public DateTime? PaidDate { get; set; }
     }
+
+    public class DocumentChargeRecordModel
+    {
+        public List<DocumentChargeRecord> DocChargeRecords { get; set; }
+
+        public decimal Total { get; set; }
+    }
+
+    public class DocumentChargeRecord
+    {
+        public string Customer { get; set; }
+
+        public string VehicleNo { get; set; }
+
+        public DateTime PaidDate { get; set; }
+
+        public decimal Amount { get; set; }
+    }
 }

@@ -48,8 +48,8 @@ namespace MS_Finance.Model.Repositories.OA
 
         public virtual List<FinePayment> FinePayments { get; set; }
 
-        //public virtual ContractFine ContractFine  { get; set; }
+        public decimal DocumentCharge { get; set; }
 
-        //public virtual Excess Excess { get; set; }
+        public string Description { get; set; }
     }
 }

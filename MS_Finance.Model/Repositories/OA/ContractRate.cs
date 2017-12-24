@@ -6,32 +6,29 @@ using System.Threading.Tasks;
 
 namespace MS_Finance.Model.Repositories.OA
 {
-    public class Guarantor
+    public class ContractRate
     {
-
-        public Guarantor()
+        public ContractRate()
         {
             Id = Guid.NewGuid().ToString();
         }
 
         public string Id { get; set; }
 
-        public string NIC { get; set; }
+        public int Type { get; set; }
 
-        public string Name { get; set; }
+        public string Description { get; set; }
 
-        public DateTime CreatedDate { get; set; }
-
-        public string Address { get; set; }
-
-        public string ContactNo { get; set; }
-
-        public string Occupation { get; set; }
+        public decimal Value { get; set; }
 
         public string CreatedByUserId { get; set; }
 
         public string CreatedByUserName { get; set; }
 
-        public string Description { get; set; }
+        public DateTime CreatedOn { get; set; }
+
+        public DateTime ValidFrom { get; set; }
+
+        public DateTime? ValidUntil { get; set; }
     }
 }

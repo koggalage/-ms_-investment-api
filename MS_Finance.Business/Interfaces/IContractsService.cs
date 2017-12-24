@@ -43,5 +43,11 @@ namespace MS_Finance.Business.Interfaces
         ContractReportModel GetOpenOrClosedContracts(bool open = true);
 
         void UploadContractFiles(string contractId, string imageName, string createdByUserId, string createdByUserName);
+
+        decimal GetRate(int type, DateTime validFor);
+
+        decimal GetDocumentCharge(decimal amount);
+
+        DocumentChargeRecordModel GetDocumentChargeReport(DateTime from, DateTime to);
     }
 }

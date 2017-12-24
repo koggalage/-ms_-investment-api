@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\ContractServiceException.cs" />
     <Compile Include="Interfaces\IContractFineService.cs" />
+    <Compile Include="Interfaces\IContractRateService.cs" />
     <Compile Include="Interfaces\IContractSettlementService.cs" />
     <Compile Include="Interfaces\IContractsService.cs" />
     <Compile Include="Interfaces\IBrokerService.cs" />
@@ -53,9 +54,12 @@
     <Compile Include="Interfaces\IGuarantorService.cs" />
     <Compile Include="Interfaces\IInstalmentService.cs" />
     <Compile Include="Models\EnumsAndConstants\ContractEnums.cs" />
+    <Compile Include="Models\EnumsAndConstants\ContractRateEnums.cs" />
+    <Compile Include="Models\EnumsAndConstants\EnumExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BrokerService.cs" />
     <Compile Include="Services\ContractFineService.cs" />
+    <Compile Include="Services\ContractRateService.cs" />
     <Compile Include="Services\ContractSettlementService.cs" />
     <Compile Include="Services\ContractsService.cs" />
     <Compile Include="Services\CustomerService.cs" />

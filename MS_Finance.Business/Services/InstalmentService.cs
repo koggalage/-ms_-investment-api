@@ -344,7 +344,7 @@ namespace MS_Finance.Services
             var contractExcess = ExcessService.GetExcessForContract(contract.Id);
             var excess = contractExcess != null ? contractExcess.Amount : 0.0m;
 
-            var fine = CalculateFine(contract.Insallment, dueDate, paidDate);
+            var fine = CalculateFine(contract.Insallment, dueDate, paidDate, contractId);
 
             return fine;
 
@@ -359,25 +359,29 @@ namespace MS_Finance.Services
             foreach (var item in partialyPaidInstalments)
             {
                 var actualUnsettleAmount = item.UnsettleAmount;
-                fine += CalculateFine(actualUnsettleAmount, item.DueDate, paidDate);
+                fine += CalculateFine(actualUnsettleAmount, item.DueDate, paidDate, contractId);
             }
 
             return fine;
         }
 
 
-        private decimal CalculateFine(decimal amount, DateTime dueDate, DateTime paidDate)
+        private decimal CalculateFine(decimal amount, DateTime dueDate, DateTime paidDate, string contractId)
         {
+            var contract = UoW.Contracts.GetSingle(x => x.Id == contractId);
+
             var timeSpan = (paidDate.Date - dueDate.Date).Days;
             var fine = 0.0m;
 
             if (timeSpan > 7 && timeSpan <= 30)
             {
-                fine = amount * 0.1m;
+                //fine = amount * 0.1m;
+                fine = amount * ContractsService.GetRate((int)ContractRateType.FineForShortTerm, contract.CreatedOn);
             }
             else if (timeSpan > 30)
             {
-                fine = amount * 0.2m;
+                //fine = amount * 0.2m;
+                fine = amount * ContractsService.GetRate((int)ContractRateType.FineForLongTerm, contract.CreatedOn);
             }
 
             return fine;
@@ -536,7 +540,7 @@ namespace MS_Finance.Services
             {
                 InstalmentAmount = x.Contract.Insallment,
                 Customer = x.Contract.Customer.Name,
-                Fine = CalculateFine(x.Contract.Insallment, x.DueDate, DateTime.Now) + CalculateFine(x.UnsettleAmount, x.DueDate, DateTime.Now),
+                Fine = CalculateFine(x.Contract.Insallment, x.DueDate, DateTime.Now, x.Contract.Id) + CalculateFine(x.UnsettleAmount, x.DueDate, DateTime.Now, x.Contract.Id),
                 ContractNo = x.Contract.VehicleNo
             }).ToList();
 
@@ -563,7 +567,7 @@ namespace MS_Finance.Services
 
             contractInstalments.ForEach(x =>
                 accruedRevenue += 
-                (x.Contract.Insallment + CalculateFine(x.Contract.Insallment, x.DueDate, toDay) + CalculateFine(x.UnsettleAmount, x.DueDate, toDay))
+                (x.Contract.Insallment + CalculateFine(x.Contract.Insallment, x.DueDate, toDay, x.Contract.Id) + CalculateFine(x.UnsettleAmount, x.DueDate, toDay, x.Contract.Id))
             );
 
             return accruedRevenue;
