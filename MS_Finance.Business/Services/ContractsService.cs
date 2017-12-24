@@ -247,7 +247,7 @@ namespace MS_Finance.Services
             var rate = NoOfInstallments <= 6 ? GetRate((int)ContractRateType.InterestForShortTerm, DateTime.Now) : GetRate((int)ContractRateType.InterestForLongTerm, DateTime.Now);
 
             decimal interestRate = rate;
-            decimal Insallment = ((Amount * Convert.ToDecimal(interestRate)) + Amount) / 12;
+            decimal Insallment = ((Amount * Convert.ToDecimal(interestRate)) + Amount) / NoOfInstallments;
             Insallment = Math.Round(Insallment, 2);
             return Insallment;
         }

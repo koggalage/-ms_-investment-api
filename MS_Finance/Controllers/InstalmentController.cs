@@ -121,5 +121,11 @@ namespace MS_Finance.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetContractDetails(contractId));
         }
 
+        [HttpGet]
+        public virtual HttpResponseMessage GetContractDocuments(string contractId)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetContractDocuments(contractId));
+        }
+
     }
 }

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Web;
 using System.Data.Entity;
 using System.Data.Objects;
+using System.Configuration;
 
 namespace MS_Finance.Services
 {
@@ -22,13 +23,15 @@ namespace MS_Finance.Services
         protected IExcessService ExcessService;
         protected IFinePaymentService FinePaymentService;
         protected IContractSettlementService ContractSettlementService;
+        protected IContractFilesService ContractFilesService;
 
         public InstalmentService(IUnitOfWork UoW,
             IContractsService ContractsService,
             IContractFineService ContractFineService,
             IExcessService ExcessService,
             IFinePaymentService FinePaymentService,
-            IContractSettlementService ContractSettlementService)
+            IContractSettlementService ContractSettlementService,
+            IContractFilesService ContractFilesService)
             :base(UoW)
         {
             this.ContractsService = ContractsService;
@@ -37,6 +40,7 @@ namespace MS_Finance.Services
             this.FinePaymentService = FinePaymentService;
             this.ContractFineService = ContractFineService;
             this.ContractSettlementService = ContractSettlementService;
+            this.ContractFilesService = ContractFilesService;
         }
 
         public IQueryable<ContractInstallment> GetAll()
@@ -722,6 +726,28 @@ namespace MS_Finance.Services
 
             UoW.ContractSettlements.Add(settlement);
             UoW.Commit();
+        }
+
+        public ContractFilesModel GetContractDocuments(string contractId)
+        {
+            string localhostPath = ConfigurationManager.AppSettings["Companyurl"];
+            string imageUrl = localhostPath + "/ContractFiles/";
+
+            var files = ContractFilesService.GetAll().Where(x => x.Contract.Id == contractId);
+
+            var Model = new ContractFilesModel();
+
+            Model.Files = new List<ContractImagesModel>();
+            foreach (var file in files)
+            {
+                Model.Files.Add(new ContractImagesModel()
+                {
+                    url = imageUrl + file.FilePath,
+                    Caption = file.FilePath
+                });
+            }
+
+            return Model;
         }
       
     }

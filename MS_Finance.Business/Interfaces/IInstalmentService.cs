@@ -66,5 +66,7 @@ namespace MS_Finance.Business.Interfaces
         List<RevenueRecord> GetInstalmentsList(DateTime from, DateTime to);
 
         ContractDetailModel GetContractDetails(string contractId);
+
+        ContractFilesModel GetContractDocuments(string contractId);
     }
 }
