@@ -49,5 +49,7 @@ namespace MS_Finance.Business.Interfaces
         decimal GetDocumentCharge(decimal amount);
 
         DocumentChargeRecordModel GetDocumentChargeReport(DateTime from, DateTime to);
+
+        string GenerateContractNumber(string code);
     }
 }

@@ -38,6 +38,8 @@ namespace MS_Finance.Model.Repositories.Interfaces
 
         IRepository<ContractRate> ContractRates { get; }
 
+        IRepository<Location> Locations { get; }
+
         #endregion
     }
 }

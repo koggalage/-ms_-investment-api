@@ -44,5 +44,7 @@ namespace MS_Finance.Model
         public DbSet<ContractFile> ContractFiles { get; set; }
 
         public DbSet<ContractRate> ContractRates { get; set; }
+
+        public DbSet<Location> Locations { get; set; }
     }
 }

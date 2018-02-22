@@ -90,7 +90,7 @@ namespace MS_Finance.Services
             searchTerm = !string.IsNullOrEmpty(searchTerm) ? searchTerm.ToLower() : string.Empty;
 
             var result = (from a in base.GetAll()
-                          where (a.VehicleNo.ToLower() == searchTerm || a.Customer.NIC.ToLower() == searchTerm || a.Customer.Name.ToLower().Contains(searchTerm) || a.Customer.MobileNumber == searchTerm)
+                          where (a.VehicleNo.ToLower() == searchTerm || a.Customer.NIC.ToLower() == searchTerm || a.Customer.Name.ToLower().Contains(searchTerm) || a.Customer.MobileNumber == searchTerm || (!string.IsNullOrEmpty(a.ContractNo) && a.ContractNo.ToLower().Equals(searchTerm)))
                           select new SearchOptionsModel { VehicleNumber = a.VehicleNo, Name = a.Customer.Name, NIC = a.Customer.NIC, ContractId = a.Id })
                          .ToList();
 
@@ -313,5 +313,25 @@ namespace MS_Finance.Services
 
             return result;
         }
+
+        public string GenerateContractNumber(string code)
+        {
+            var currentYear = DateTime.Now.Year.ToString();
+            var lastGeneratedNumber = 
+                this.GetAll()
+                .AsEnumerable()
+                .Where(x => x.ContractNo != null && x.ContractNo.StartsWith(code) && x.ContractNo.Split(new char[] { '-' })[1] == currentYear)
+                .OrderByDescending(c => c.ContractNo.Split(new char[] { '-' })[2])
+                .Select(c => c.ContractNo)
+                .FirstOrDefault();
+
+            if (string.IsNullOrEmpty(lastGeneratedNumber))
+                return string.Format("{0}-{1}-{2}", code, currentYear, "1");
+
+            var newNumber = string.Format("{0}-{1}-{2}", code, currentYear,(int.Parse(lastGeneratedNumber.Split(new char[] { '-' })[2]) + 1).ToString());
+
+            return newNumber;
+        }
+
     }
 }

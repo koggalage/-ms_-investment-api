@@ -55,6 +55,7 @@
     <Compile Include="Interfaces\IFinePaymentService.cs" />
     <Compile Include="Interfaces\IGuarantorService.cs" />
     <Compile Include="Interfaces\IInstalmentService.cs" />
+    <Compile Include="Interfaces\ILocationsService.cs" />
     <Compile Include="Models\EnumsAndConstants\ContractEnums.cs" />
     <Compile Include="Models\EnumsAndConstants\ContractRateEnums.cs" />
     <Compile Include="Models\EnumsAndConstants\EnumExtensions.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Services\FinePaymentService.cs" />
     <Compile Include="Services\GuarantorService.cs" />
     <Compile Include="Services\InstalmentService.cs" />
+    <Compile Include="Services\LocationsService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

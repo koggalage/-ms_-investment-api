@@ -90,14 +90,14 @@ namespace MS_Finance.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public virtual HttpResponseMessage GetAccuredRevenueForToday()
         {
             return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetAccuredRevenue(DateTime.Now, DateTime.Now));
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public virtual HttpResponseMessage GetRevenueForToday()
         {
             return Request.CreateResponse(HttpStatusCode.OK, _instalmentService.GetRevenue(DateTime.Now, DateTime.Now));

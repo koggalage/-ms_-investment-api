@@ -20,11 +20,13 @@ namespace MS_Finance.Controllers
 
         private IContractsService _contractsService;
         private IFileUploadService _fileUploadService;
+        private ILocationsService _locationService;
 
-        public ContractController(ContractsService contractsService, FileUploadService fileUploadService)
+        public ContractController(ContractsService contractsService, FileUploadService fileUploadService, LocationsService locationService)
         {
             this._contractsService = contractsService;
             this._fileUploadService = fileUploadService;
+            this._locationService = locationService;
         }
 
 
@@ -144,6 +146,25 @@ namespace MS_Finance.Controllers
         public HttpResponseMessage GetDocumentChargeReport(DateTime from, DateTime to)
         {
             return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GetDocumentChargeReport(from, to));
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public HttpResponseMessage AddContractLocation(ContractLocationModel model)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _locationService.CreateNewLocation(model));
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetAllLocations()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _locationService.GetAllLocations());
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GenerateContractNumber(string code)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GenerateContractNumber(code));
         }
 
     }
