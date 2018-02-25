@@ -208,7 +208,7 @@ namespace MS_Finance.Services
                 VehicleNo = x.VehicleNo,
                 CustomerName = x.Customer != null ? x.Customer.Name : string.Empty,
                 ContractNo = x.Customer != null ? x.Customer.MobileNumber : string.Empty,
-            }).ToList();
+            }).OrderBy(c => c.CustomerName).ToList();
 
             model.Contracts = contracts;
             model.NoOfContracts = contracts.Count;

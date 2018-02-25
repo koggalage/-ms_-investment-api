@@ -415,7 +415,7 @@ namespace MS_Finance.Services
 
         public List<ContractInstallment> GetInstalmentsForContract(string contractId)
         {
-            return this.GetAll().Where(x => x.Contract.Id == contractId).ToList();
+            return this.GetAll().Where(x => x.Contract.Id == contractId).OrderBy(x => x.DueDate).ToList();
         }
 
         public ContractDetailModel GetContractDetails(string contractId)
@@ -580,7 +580,7 @@ namespace MS_Finance.Services
 
         public List<RevenueRecord> GetInstalmentsList(DateTime from, DateTime to)
         {
-            to = to.AddMonths(10);
+            //to = to.AddMonths(10);
 
             var contractInstalments = this.GetAllWithIncludes(x => x.Contract, c => c.Contract.Customer)
                                         .Where(x => x.DueDate >= from && x.DueDate <= to && x.Paid == (int)InstalmentPaymentStatus.NotPaid)
