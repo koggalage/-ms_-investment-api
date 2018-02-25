@@ -101,7 +101,8 @@ namespace MS_Finance.Controllers
 
             System.Web.HttpFileCollection hfc = System.Web.HttpContext.Current.Request.Files;
 
-            string imagePath;
+            string uploadedFileName = string.Empty;
+            //string imagePath;
             // CHECK THE FILE COUNT.
             for (int iCnt = 0; iCnt <= hfc.Count - 1; iCnt++)
             {
@@ -109,17 +110,29 @@ namespace MS_Finance.Controllers
 
                 if (hpf.ContentLength > 0)
                 {
-                    // CHECK IF THE SELECTED FILE(S) ALREADY EXISTS IN FOLDER. (AVOID DUPLICATE)
-                    if (!File.Exists(sPath + Path.GetFileName(hpf.FileName)))
+
+                    uploadedFileName = Path.GetFileName(hpf.FileName);
+                    uploadedFileName = uploadedFileName.Replace(" ","");
+                    uploadedFileName = Guid.NewGuid().ToString("N") + uploadedFileName;
+
+                    //CHECK IF THE SELECTED FILE(S) ALREADY EXISTS IN FOLDER. (AVOID DUPLICATE)
+                    if (!File.Exists(sPath + uploadedFileName))
                     {
                         // SAVE THE FILES IN THE FOLDER.
-                        hpf.SaveAs(sPath + Path.GetFileName(hpf.FileName));
+                        hpf.SaveAs(sPath + uploadedFileName);
                         iUploadedCnt = iUploadedCnt + 1;
                     }
+                    // CHECK IF THE SELECTED FILE(S) ALREADY EXISTS IN FOLDER. (AVOID DUPLICATE)
+                    //if (!File.Exists(sPath + Path.GetFileName(hpf.FileName)))
+                    //{
+                    //    // SAVE THE FILES IN THE FOLDER.
+                    //    hpf.SaveAs(sPath + Path.GetFileName(hpf.FileName));
+                    //    iUploadedCnt = iUploadedCnt + 1;
+                    //}
                 }
                 if (iCnt <= hfc.Count - 1)
                 {
-                    _contractsService.UploadContractFiles(contractId, Path.GetFileName(hpf.FileName), createdByUserId, createdByUserName);
+                    _contractsService.UploadContractFiles(contractId, uploadedFileName, createdByUserId, createdByUserName);
                 }
             }
 
