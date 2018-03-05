@@ -645,7 +645,8 @@ namespace MS_Finance.Services
 
             foreach (var item in contracts)
             {
-                var excess = ExcessService.GetAll().Where(x => x.Contract.Id == item.Id).Sum(y => y.Amount);
+                var listExcess = ExcessService.GetAll().Where(x => x.Contract.Id == item.Id).ToList();
+                var excess = listExcess != null ? listExcess.Sum(c => c.Amount) : 0.0m; //ExcessService.GetAll().Where(x => x.Contract.Id == item.Id).Select(x => x.Amount).Sum();
 
                 contractCloseList.Add(new ContractCloseModel()
                 {
@@ -664,7 +665,8 @@ namespace MS_Finance.Services
 
         public decimal GetTotalPaidPayment(string contractId)
         {
-            return this.GetAll().Where(x => x.Contract.Id == contractId).Sum(c => c.PaidAmount);
+            var installments = this.GetAll().Where(x => x.Contract.Id == contractId).ToList();
+            return installments != null ? installments.Sum(c => c.PaidAmount) : 0.0m;
         }
 
         public decimal GetPaybleAtContractClosingDate(string contractId, DateTime closedDate)

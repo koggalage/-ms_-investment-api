@@ -15,5 +15,9 @@ namespace MS_Finance.Business.Interfaces
         Guarantor IsGuarantorExist(string guarantorNIC);
 
         GurantorVM GetGuarantorDetails();
+
+        void AddRange(IEnumerable<Guarantor> guarantors);
+
+        Guarantor GetById(string id);
     }
 }

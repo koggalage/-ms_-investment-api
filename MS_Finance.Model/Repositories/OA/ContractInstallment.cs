@@ -37,5 +37,6 @@ namespace MS_Finance.Model.Repositories.OA
         public bool Approved { get; set; }
 
         public virtual Contract Contract { get; set; }
+
     }
 }

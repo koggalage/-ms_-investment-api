@@ -26,5 +26,7 @@ namespace MS_Finance.Business.Interfaces
         bool CreateCustomer(CustomerModel customerModel);
 
         Customer IsCustomerExist(string customerNIC);
+
+        void AddRange(IEnumerable<Customer> customers);
     }
 }

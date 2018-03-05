@@ -33,9 +33,9 @@ namespace MS_Finance.Controllers
             customer.CreatedByUserName = User.Identity.Name;
             customer.CreatedOn = DateTime.Now;
 
-            _customerService.CreateCustomer(customer);
+             _customerService.CreateCustomer(customer);
 
-            return Request.CreateResponse(HttpStatusCode.OK, true);
+             return Request.CreateResponse(HttpStatusCode.OK, customer.NIC);
         }
 
         [HttpPost]

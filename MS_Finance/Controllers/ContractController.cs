@@ -21,12 +21,14 @@ namespace MS_Finance.Controllers
         private IContractsService _contractsService;
         private IFileUploadService _fileUploadService;
         private ILocationsService _locationService;
+        private IImportFacadeService _importFacadeService;
 
-        public ContractController(ContractsService contractsService, FileUploadService fileUploadService, LocationsService locationService)
+        public ContractController(ContractsService contractsService, FileUploadService fileUploadService, LocationsService locationService, ImportFacadeService importService)
         {
             this._contractsService = contractsService;
             this._fileUploadService = fileUploadService;
             this._locationService = locationService;
+            this._importFacadeService = importService;
         }
 
 
@@ -180,5 +182,39 @@ namespace MS_Finance.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, _contractsService.GenerateContractNumber(code));
         }
 
+        [HttpGet]
+        public HttpResponseMessage ImportCustomers(string filePath)
+        {
+            _importFacadeService.ImportCustomers(filePath);
+            return Request.CreateResponse(HttpStatusCode.OK, true);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage ImportGuarentors(string filePath)
+        {
+            _importFacadeService.ImportGuarentors(filePath);
+            return Request.CreateResponse(HttpStatusCode.OK, true);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage ImportBrokers(string filePath)
+        {
+            _importFacadeService.ImportBrokers(filePath);
+            return Request.CreateResponse(HttpStatusCode.OK, true);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage ImportContracts(string filePath)
+        {
+            _importFacadeService.ImportContracts(filePath);
+            return Request.CreateResponse(HttpStatusCode.OK, true);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage ImportInstallments(string filePath)
+        {
+            _importFacadeService.ImportInstallments(filePath);
+            return Request.CreateResponse(HttpStatusCode.OK, true);
+        }
     }
 }

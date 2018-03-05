@@ -24,5 +24,7 @@ namespace MS_Finance.Business.Interfaces
         bool CreateBroker(BrokerModel brokerModel);
 
         Broker IsBrokerExist(string brokerNIC);
+
+        void AddRange(IEnumerable<Broker> brokers);
     }
 }

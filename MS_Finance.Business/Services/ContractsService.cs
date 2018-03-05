@@ -333,5 +333,10 @@ namespace MS_Finance.Services
             return newNumber;
         }
 
+        public void AddRange(IEnumerable<Contract> contracts)
+        {
+            base.AddRange(contracts);
+        }
+
     }
 }

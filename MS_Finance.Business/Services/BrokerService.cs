@@ -89,5 +89,10 @@ namespace MS_Finance.Business
                 .Where(x => x.NIC == brokerNIC).FirstOrDefault();
         }
 
+        public void AddRange(IEnumerable<Broker> brokers)
+        {
+            base.AddRange(brokers);
+        }
+
     }
 }

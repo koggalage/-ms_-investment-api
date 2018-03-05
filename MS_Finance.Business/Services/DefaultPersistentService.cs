@@ -65,6 +65,13 @@ namespace MS_Finance.Business.Services
         public virtual void Attach(T entity)
         {
             UoW.GetRepository<T>().Attach(entity);
+            UoW.Commit();
+        }
+
+        public virtual void AddRange(IEnumerable<T> entities)
+        {
+            UoW.GetRepository<T>().AddRange(entities);
+            UoW.Commit();
         }
 
     }

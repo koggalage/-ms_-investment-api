@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +18,8 @@ namespace MS_Finance.Model.Repositories.OA
 
         public string Id { get; set; }
 
+        [Index("IX_X_GuarantorNIC", 1, IsUnique = true)]
+        [MaxLength(255)]
         public string NIC { get; set; }
 
         public string Name { get; set; }

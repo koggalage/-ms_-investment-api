@@ -82,5 +82,10 @@ namespace MS_Finance.Services
                 .Where(x => x.NIC == customerNIC).FirstOrDefault();
         }
 
+        public void AddRange(IEnumerable<Customer> customers)
+        {
+            base.AddRange(customers);
+        }
+
     }
 }

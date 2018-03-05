@@ -94,5 +94,10 @@ namespace MS_Finance.Services
 
             return Model;
         }
+
+        public void AddRange(IEnumerable<Guarantor> guarantors)
+        {
+            base.AddRange(guarantors);
+        }
     }
 }

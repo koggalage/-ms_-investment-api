@@ -51,5 +51,7 @@ namespace MS_Finance.Business.Interfaces
         DocumentChargeRecordModel GetDocumentChargeReport(DateTime from, DateTime to);
 
         string GenerateContractNumber(string code);
+
+        void AddRange(IEnumerable<Contract> contracts);
     }
 }

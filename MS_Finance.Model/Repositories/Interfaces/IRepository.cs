@@ -25,5 +25,7 @@ namespace MS_Finance.Model.Repositories.Interfaces
         void Delete(T entity);
 
         void Attach(T entity);
+
+        void AddRange(IEnumerable<T> entities);
     }
 }

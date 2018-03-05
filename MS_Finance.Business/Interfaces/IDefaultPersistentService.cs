@@ -23,5 +23,7 @@ namespace MS_Finance.Business.Interfaces
         void Delete(T entity);
 
         void Attach(T entity);
+
+        void AddRange(IEnumerable<T> entities);
     }
 }

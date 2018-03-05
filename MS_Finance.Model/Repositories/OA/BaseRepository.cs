@@ -62,5 +62,10 @@ namespace MS_Finance.Model.Repositories.OA
             _DbSet.Attach(entity);
         }
 
+        public void AddRange(IEnumerable<T> entities)
+        {
+            _DbSet.AddRange(entities);
+        }
+
     }
 }
