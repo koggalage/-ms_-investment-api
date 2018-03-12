@@ -50,7 +50,9 @@ namespace MS_Finance.Controllers
             contract.CreatedByUserId = User.Identity.GetUserId();
             contract.CreatedByUserName = User.Identity.Name;
 
-            return Request.CreateResponse(HttpStatusCode.OK, _contractsService.CreateContract(contract));
+            var savedContract = _contractsService.CreateContract(contract);
+
+            return Request.CreateResponse(HttpStatusCode.OK, savedContract.Customer.NIC);
         }
 
         [HttpGet]

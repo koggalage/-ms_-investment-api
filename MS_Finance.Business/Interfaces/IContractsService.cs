@@ -26,7 +26,7 @@ namespace MS_Finance.Business.Interfaces
 
         List<SearchOptionsModel> GetContractsBySearchTerm(string searchTerm);
 
-        bool CreateContract(ContractModel contractModel);
+        Contract CreateContract(ContractModel contractModel);
 
         GetBrokerDetailsVM GetBrokersModel();
 

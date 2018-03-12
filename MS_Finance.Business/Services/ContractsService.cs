@@ -97,7 +97,7 @@ namespace MS_Finance.Services
             return result;
         }
 
-        public bool CreateContract(ContractModel contractModel)
+        public Contract CreateContract(ContractModel contractModel)
         {
             var customer = UoW.Customers.GetSingle(x => x.Id == contractModel.CustomerId);
             var broker = UoW.Brokers.GetSingle(x => x.Id == contractModel.BrokerId);
@@ -131,7 +131,7 @@ namespace MS_Finance.Services
             UoW.Contracts.Add(contract);
             UoW.Commit();
 
-            return true;
+            return contract;
         }
 
         private bool CustomerHasRunningContract(string customerId)
